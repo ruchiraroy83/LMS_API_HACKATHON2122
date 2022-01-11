@@ -22,7 +22,7 @@ public class LMSPojo {
 	private String str_DBPWD;
 	private String str_Query;
 	private String str_userskillsid;
-	private String status_code;
+	private int status_code;
 	private String status_message;
 
 	
@@ -130,10 +130,10 @@ public class LMSPojo {
 	public void setStr_userskillsid(String str_userskillsid) {
 		this.str_userskillsid = str_userskillsid;
 	}
-	public String getStatus_code() {
+	public int getStatus_code() {
 		return status_code;
 	}
-	public void setStatus_code(String status_code) {
+	public void setStatus_code(int status_code) {
 		this.status_code = status_code;
 	}
 	public String getStatus_message() {

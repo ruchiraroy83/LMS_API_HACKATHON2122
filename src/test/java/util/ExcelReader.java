@@ -15,6 +15,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.NumberToTextConverter;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReader {
 
@@ -41,7 +51,10 @@ public class ExcelReader {
 	}
 
 	private Workbook getWorkBook(String excelFilePath) throws IOException, InvalidFormatException {
-		return WorkbookFactory.create(new File(excelFilePath));
+		String path = "src/test/resources/" + excelFilePath;
+		File fileObj = new File(path);
+		String dirPath = fileObj.getAbsolutePath();
+		return WorkbookFactory.create(new File(dirPath));
 	}
 
 	private List<Map<String, String>> readSheet(Sheet sheet) {
@@ -151,4 +164,41 @@ public class ExcelReader {
 		}
 		return columnMapdata;
 	}
+	public ArrayList<String> getColumnNames(String path,String strSheetName) 
+	{
+	try
+	{
+		ArrayList<String> dataList = new ArrayList<String>();
+		
+		FileInputStream fis= new FileInputStream(path);  
+			
+		//creating workbook instance that refers to .xlsx file  
+		XSSFWorkbook wb=new XSSFWorkbook(fis);   
+		//creating worksheet instance 
+		XSSFSheet sheet = wb.getSheet(strSheetName);
+		
+		//Identifying The Column-
+		Iterator<Row> rows = sheet.iterator(); // sheet is collection of rows
+        Row firstrow = rows.next();
+        Iterator<Cell> ce = firstrow.cellIterator(); //row is collection of cells
+        while (ce.hasNext()) 
+        {
+            Cell value = ce.next();
+
+            if (value.getCellType() == CellType.STRING) {
+
+                dataList.add(value.getStringCellValue());
+            } 
+           
+        }
+        return dataList;
+	}
+        catch(Exception e) 
+    	{
+    		System.out.println(e.getMessage()+ e);
+    		return null;
+    	}
+	
+	}
+	
 }

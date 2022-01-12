@@ -3,7 +3,6 @@ package util;
 import static util.constant.LMSApiConstant.CONST_SENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
-import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
@@ -27,6 +26,7 @@ import io.restassured.specification.RequestSpecification;
 
 public class Send_Request_For_Method {
 
+	private static final String CONST_USER_SKILL_ID = "user_skill_id";
 	private Properties prop;
 
 	public Send_Request_For_Method() {
@@ -85,17 +85,19 @@ public class Send_Request_For_Method {
 			httpRequest.body(requestString);
 			System.out.println("Request :" + requestString);
 			response = httpRequest.post(strURL);
-			
+
 			if (response != null) {
 				System.out.println("Response :" + response.asString());
 
-				Map responseMap = mapper.readValue(response.asString(), Map.class);
-				if (responseMap.get("user_skill_id") != null) {
-					String userSkillId = (String) responseMap.get("user_skill_id");
-					
-					
+				Map<String, Object> unmatchedFields = getUnMatchedFields(requestString, response.asString());
+
+				for (Map.Entry<String, Object> map : unmatchedFields.entrySet()) {
+					ExcelWriter writer = new ExcelWriter();
+					boolean status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
+							map.getValue());
+					System.out.println("File Updated with " + map.getKey() + ": " + map.getValue() + "? " + status);
 				}
-				System.out.println(responseMap);
+
 			}
 			return response;
 
@@ -143,6 +145,31 @@ public class Send_Request_For_Method {
 			return false;
 		}
 
+	}
+
+	private Map<String, Object> getUnMatchedFields(String requestString, String responseString) {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> map = new HashedMap<>();
+		try {
+			Map<String, Object> requestMap = mapper.readValue(requestString, Map.class);
+			Map<String, Object> responseMap = mapper.readValue(responseString, Map.class);
+
+			for (Map.Entry<String, Object> response : responseMap.entrySet()) {
+				boolean matchFound = Boolean.FALSE;
+				for (Map.Entry<String, Object> request : requestMap.entrySet()) {
+					if (response.getKey().equals(request.getKey())) {
+						matchFound = Boolean.TRUE;
+					}
+				}
+				if (!matchFound && !"message".equalsIgnoreCase(response.getKey())) {
+					map.put(response.getKey(), response.getValue());
+				}
+			}
+
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 
 }

@@ -95,7 +95,7 @@ public class UserSkills {
 	public void json_schema_is_valid() {
 		System.out.println(this.lmsPojo.getRes_response());
 		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
-		if (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) {
+		if ((this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) && (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 201))) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 					this.lmsPojo.getStr_SchemaFileallusers());
 		} else {

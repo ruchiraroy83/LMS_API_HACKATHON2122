@@ -10,3 +10,9 @@ Scenario Outline: Validate POST all UserSkills when user logged in as "<UserName
     |SheetName|RowNumber|
     |InputData_UserSkills_POST|0|
     |InputData_UserSkills_POST|1|
+    |InputData_UserSkills_POST|2|
+    |InputData_UserSkills_POST|3|
+    |InputData_UserSkills_POST|4|
+    |InputData_UserSkills_POST|5|
+    |InputData_UserSkills_POST|6|
+   

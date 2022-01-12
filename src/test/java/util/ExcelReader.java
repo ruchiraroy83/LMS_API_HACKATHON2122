@@ -1,8 +1,10 @@
 package util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.NumberToTextConverter;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -40,7 +34,7 @@ public class ExcelReader {
 		return readSheet(sheet);
 	}
 
-	private Sheet getSheetByName(String excelFilePath, String sheetName) throws IOException, InvalidFormatException {
+	public Sheet getSheetByName(String excelFilePath, String sheetName) throws IOException, InvalidFormatException {
 		Sheet sheet = getWorkBook(excelFilePath).getSheet(sheetName);
 		return sheet;
 	}
@@ -90,10 +84,10 @@ public class ExcelReader {
 					if (CellType.STRING == cell.getCellType()) {
 						return row.getRowNum();
 
-					} else if (CellType.NUMERIC== cell.getCellType()) {
+					} else if (CellType.NUMERIC == cell.getCellType()) {
 						return row.getRowNum();
 
-					} else if (CellType.BOOLEAN== cell.getCellType()) {
+					} else if (CellType.BOOLEAN == cell.getCellType()) {
 						return row.getRowNum();
 					} else if (CellType.ERROR == cell.getCellType()) {
 						return row.getRowNum();
@@ -113,7 +107,7 @@ public class ExcelReader {
 		Cell cell;
 		if (row == null) {
 			if (sheet.getRow(sheet.getFirstRowNum()).getCell(currentColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
-					.getCellType()!= CellType.BLANK) {
+					.getCellType() != CellType.BLANK) {
 				String columnHeaderName = sheet.getRow(sheet.getFirstRowNum()).getCell(currentColumn)
 						.getStringCellValue();
 				columnMapdata.put(columnHeaderName, "");
@@ -164,41 +158,37 @@ public class ExcelReader {
 		}
 		return columnMapdata;
 	}
-	public ArrayList<String> getColumnNames(String path,String strSheetName) 
-	{
-	try
-	{
-		ArrayList<String> dataList = new ArrayList<String>();
-		
-		FileInputStream fis= new FileInputStream(path);  
-			
-		//creating workbook instance that refers to .xlsx file  
-		XSSFWorkbook wb=new XSSFWorkbook(fis);   
-		//creating worksheet instance 
-		XSSFSheet sheet = wb.getSheet(strSheetName);
-		
-		//Identifying The Column-
-		Iterator<Row> rows = sheet.iterator(); // sheet is collection of rows
-        Row firstrow = rows.next();
-        Iterator<Cell> ce = firstrow.cellIterator(); //row is collection of cells
-        while (ce.hasNext()) 
-        {
-            Cell value = ce.next();
 
-            if (value.getCellType() == CellType.STRING) {
+	public ArrayList<String> getColumnNames(String path, String strSheetName) {
+		try {
+			ArrayList<String> dataList = new ArrayList<String>();
 
-                dataList.add(value.getStringCellValue());
-            } 
-           
-        }
-        return dataList;
+			FileInputStream fis = new FileInputStream(path);
+
+			// creating workbook instance that refers to .xlsx file
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			// creating worksheet instance
+			XSSFSheet sheet = wb.getSheet(strSheetName);
+
+			// Identifying The Column-
+			Iterator<Row> rows = sheet.iterator(); // sheet is collection of rows
+			Row firstrow = rows.next();
+			Iterator<Cell> ce = firstrow.cellIterator(); // row is collection of cells
+			while (ce.hasNext()) {
+				Cell value = ce.next();
+
+				if (value.getCellType() == CellType.STRING) {
+
+					dataList.add(value.getStringCellValue());
+				}
+
+			}
+			return dataList;
+		} catch (Exception e) {
+			System.out.println(e.getMessage() + e);
+			return null;
+		}
+
 	}
-        catch(Exception e) 
-    	{
-    		System.out.println(e.getMessage()+ e);
-    		return null;
-    	}
-	
-	}
-	
+
 }

@@ -3,6 +3,7 @@ package util;
 import static util.constant.LMSApiConstant.CONST_SENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -102,21 +103,49 @@ public class Send_Request_For_Method {
 			return response;
 
 		case PUT:
+			
+			System.out.println("Inside method excel path is :" + ExcelPath);
+			// Request payload sending along with POST request
+			
+			// ArrayList<String> colList =
+			// reader.getColumnNames("./src/test/resources/"+ExcelPath, SheetName);
+			ExcelReader reader_put = new ExcelReader();
+			
+			
+			List<Map<String, String>> excelRows_put = reader_put.getData("./" + ExcelPath, SheetName);
+			Map<String, Object> finalMap_put = new HashMap<>();
+			Map<String, String> row_put = excelRows_put.get(rowNumber);
+			row_put.remove(CONST_USERSKILL_ID);
+			
+			for (Map.Entry<String, String> entry : row_put.entrySet()) {
+				Object value = entry.getValue();
+				String numericColumns = (String) this.prop.get("numeric.coloms");
+				if (numericColumns.contains(entry.getKey())) {
+					value = StringUtils.isEmpty(entry.getValue()) ? 0 : Integer.parseInt(entry.getValue());
+				}
+				finalMap_put.put(entry.getKey(), value);
+			}
+			ObjectMapper mapper_put = new ObjectMapper();
+			String requestString_put = mapper_put.writeValueAsString(finalMap_put);
+			System.out.println("Request string is:" + requestString_put);
+			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);
+			httpRequest.body(requestString_put);
+			System.out.println("Put Request :" + requestString_put);
+			System.out.println("URL is " + strURL);
+			response = httpRequest.put(strURL);
+			
+			if (response != null) {
+				System.out.println("Response :" + response.asString());
 
-			/*
-			 * for (int i=0;i<strCoulumnName.length;i++) { if (strCoulumnName[i]!=null ) {
-			 * requestParams.put(strCoulumnName[i], str_Input[i]);
-			 * 
-			 * }
-			 * 
-			 * }
-			 * 
-			 * httpRequest.header("Content-Type","application/json");
-			 * httpRequest.body(requestParams.toJSONString());//attach above data to the
-			 * request
-			 * 
-			 * //Response Object response=httpRequest.request(Method.PUT);
-			 */
+				Map responseMap = mapper_put.readValue(response.asString(), Map.class);
+				if (responseMap.get("user_skill_id") != null) {
+					String userSkillId = (String) responseMap.get("user_skill_id");
+					
+					
+				}
+				System.out.println(responseMap);
+			}
+			return response;
 
 		case GET:
 			RestAssured.baseURI = strURL;

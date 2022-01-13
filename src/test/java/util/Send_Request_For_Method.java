@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -28,15 +27,12 @@ import io.restassured.specification.RequestSpecification;
 public class Send_Request_For_Method {
 
 	private static final String CONST_USER_SKILL_ID = "user_skill_id";
-	private Properties prop;
+	private LMSPojo lmsPojo;
 
 	public Send_Request_For_Method() {
-		try {
-			this.prop = Fetch_Data_From_Properties_File
-					.readPropertiesFile("./src/test/resources/config/credentials.properties");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File();
+		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 	}
 
 	public static RequestSpecification request_URL(String Username, String Password) {
@@ -51,7 +47,7 @@ public class Send_Request_For_Method {
 	// str_Input[]) {
 	public Response Sent_request(String strURL, RequestSpecification httpRequest, HttpMethod httpmethod,
 			String ExcelPath, String SheetName, int rowNumber) throws InvalidFormatException, IOException {
-		Response response;
+		Response response = null;
 
 		switch (httpmethod) {
 		case POST:
@@ -74,18 +70,19 @@ public class Send_Request_For_Method {
 
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
-				String numericColumns = (String) this.prop.get("numeric.coloms");
+				String numericColumns = this.lmsPojo.getNumericColumns();
 				if (numericColumns.contains(entry.getKey())) {
-					value = StringUtils.isEmpty(entry.getValue()) ? 0 : Integer.parseInt(entry.getValue());
+					value = (StringUtils.isEmpty(entry.getValue()) || StringUtils.isAlphanumeric(entry.getValue()))
+							? entry.getValue()
+							: Integer.parseInt(entry.getValue());
 				}
 				finalMap.put(entry.getKey(), value);
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			String requestString = mapper.writeValueAsString(finalMap);
-			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);
-			httpRequest.body(requestString);
 			System.out.println("Request :" + requestString);
-			response = httpRequest.post(strURL);
+
+			response = httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON).body(requestString).post(strURL);
 
 			if (response != null) {
 				System.out.println("Response :" + response.asString());
@@ -100,28 +97,29 @@ public class Send_Request_For_Method {
 				}
 
 			}
-			return response;
+			break;
 
 		case PUT:
-			
+
 			System.out.println("Inside method excel path is :" + ExcelPath);
 			// Request payload sending along with POST request
-			
+
 			// ArrayList<String> colList =
 			// reader.getColumnNames("./src/test/resources/"+ExcelPath, SheetName);
 			ExcelReader reader_put = new ExcelReader();
-			
-			
+
 			List<Map<String, String>> excelRows_put = reader_put.getData("./" + ExcelPath, SheetName);
 			Map<String, Object> finalMap_put = new HashMap<>();
 			Map<String, String> row_put = excelRows_put.get(rowNumber);
 			row_put.remove(CONST_USERSKILL_ID);
-			
+
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
-				String numericColumns = (String) this.prop.get("numeric.coloms");
+				String numericColumns = this.lmsPojo.getNumericColumns();
 				if (numericColumns.contains(entry.getKey())) {
-					value = StringUtils.isEmpty(entry.getValue()) ? 0 : Integer.parseInt(entry.getValue());
+					value = (StringUtils.isEmpty(entry.getValue()) || StringUtils.isAlphanumeric(entry.getValue()))
+							? entry.getValue()
+							: Integer.parseInt(entry.getValue());
 				}
 				finalMap_put.put(entry.getKey(), value);
 			}
@@ -133,34 +131,37 @@ public class Send_Request_For_Method {
 			System.out.println("Put Request :" + requestString_put);
 			System.out.println("URL is " + strURL);
 			response = httpRequest.put(strURL);
-			
+
 			if (response != null) {
 				System.out.println("Response :" + response.asString());
 
 				Map responseMap = mapper_put.readValue(response.asString(), Map.class);
 				if (responseMap.get("user_skill_id") != null) {
 					String userSkillId = (String) responseMap.get("user_skill_id");
-					
-					
+
 				}
 				System.out.println(responseMap);
 			}
-			return response;
+			break;
 
 		case GET:
 			RestAssured.baseURI = strURL;
 			response = httpRequest.when().get(RestAssured.baseURI);
 			System.out.println("Response :" + response.asString());
-			return response;
+			break;
+
 		case DELETE:
 			RestAssured.baseURI = strURL;
 			response = httpRequest.when().delete(RestAssured.baseURI);
 			System.out.println("Response :" + response.asString());
-			return response;
+			break;
+
+		default:
+			break;
 
 		}
 
-		return null;
+		return response;
 	}
 
 	public boolean check_response_code(Response response, int Status_Code) {

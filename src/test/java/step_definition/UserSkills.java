@@ -1,11 +1,15 @@
 package step_definition;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
@@ -13,6 +17,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.response.Response;
 import util.Capturing_Actual_Output;
 import util.ExcelReader;
 import util.Fetch_Data_From_Properties_File;
@@ -22,26 +27,17 @@ import util.LMSPojo;
 import util.Send_Request_For_Method;
 
 public class UserSkills {
-	private LMSPojo lmsPojo;
+	private LMSPojo lmsPojo ;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		this.lmsPojo = new LMSPojo();
-		this.send_Request_For_Method = new Send_Request_For_Method();
+		Fetch_Data_From_Properties_File data_From_Properties_File= new Fetch_Data_From_Properties_File();
+		this. lmsPojo = data_From_Properties_File.getLmsPojo();
+		this.send_Request_For_Method= new Send_Request_For_Method();
 	}
 
 	@Given("User is on Endpoint: url\\/UserSkills")
 	public void user_is_on_endpoint_url_user_skills() throws IOException {
-		Properties prop = Fetch_Data_From_Properties_File
-				.readPropertiesFile("./src/test/resources/config/credentials.properties");
-		this.lmsPojo.setStr_baseURL(prop.getProperty("URL"));
-		this.lmsPojo.setUserName(prop.getProperty("Username"));
-		this.lmsPojo.setPassword(prop.getProperty("Pwd"));
-		this.lmsPojo.setStr_DBURL(prop.getProperty("SQLDatabaseURL"));
-		this.lmsPojo.setStr_DBUserName(prop.getProperty("DBUname"));
-		this.lmsPojo.setStr_DBPWD(prop.getProperty("BDPWD"));
-		this.lmsPojo.setExcelPath(prop.getProperty("UserSkills_ExcelPath"));
-
 		this.lmsPojo.setRequest_URL(
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
@@ -71,9 +67,14 @@ public class UserSkills {
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		System.out.println(this.lmsPojo.getStr_FinalURI());
 		System.out.println(this.lmsPojo.getRequest_URL());
-		
-		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
-				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
+
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
+		this.lmsPojo.setRes_response(response);
+
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertNotNull( response.getStatusCode());
 	}
 
 	@When("User sends POST request body from {string} and {int}")
@@ -84,18 +85,23 @@ public class UserSkills {
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		System.out.println(this.lmsPojo.getStr_FinalURI());
-		
+
 		System.out.println("excel path is :" + this.lmsPojo.getExcelPath() + ", SheetName is:" + sheetName
 				+ ",Row number is:" + rowNumber);
-		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
-				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), sheetName, rowNumber));
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
+		this.lmsPojo.setRes_response(response);
+
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertNotNull( response.getStatusCode());
+
 	}
-	
 
 	@When("User sends PUT request on id and request body from {string} and {int}")
-	public void user_sends_put_request_body_from_and(String sheetName, Integer rowNumber) throws InvalidFormatException, IOException {
-		
-		
+	public void user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
+			throws InvalidFormatException, IOException {
+
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
@@ -106,42 +112,48 @@ public class UserSkills {
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		System.out.println(this.lmsPojo.getStr_FinalURI());
 		System.out.println("Req URL:" + this.lmsPojo.getRequest_URL());
-		
-		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
-				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), sheetName, rowNumber));
-		
-		
+
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
+		this.lmsPojo.setRes_response(response);
+
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertNotNull( response.getStatusCode());
+
 	}
-	
+
 	@When("User sends request id ON DELETE Method from {string} and {int}")
-	public void user_sends_request_on_DELETE_method(String sheetName,int rowNumber) throws InvalidFormatException, IOException {
-		
+	public void user_sends_request_on_DELETE_method(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException {
+
 		ExcelReader reader = new ExcelReader();
-		List<Map<String,String>> testData = 
-				reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-		
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("user_skill_id"));
-	
-		//str_userskillsid = testData.get(rowNumber).get("user_skill_id");
+
+		// str_userskillsid = testData.get(rowNumber).get("user_skill_id");
 		System.out.println(this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
-		
-		
-		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL()  + this.lmsPojo.getStr_basePath());
+
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		System.out.println(this.lmsPojo.getStr_FinalURI());
-	    System.out.println(this.lmsPojo.getRequest_URL());
-		
-	    this.lmsPojo.setRes_response (this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
-	    		this.lmsPojo.getRequest_URL(),HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber));
-		
+		System.out.println(this.lmsPojo.getRequest_URL());
+
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
+		this.lmsPojo.setRes_response(response);
+		assertNotNull(response);
+		assertNotNull(response.getBody());
+		assertNotNull( response.getStatusCode());
 	}
-	
-	
+
 	@When("JSON schema is valid")
 	public void json_schema_is_valid() {
 		System.out.println(this.lmsPojo.getRes_response());
 		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
-		if ((this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) && (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 201))) {
+		if ((this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200))
+				&& (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 201))) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 					this.lmsPojo.getStr_SchemaFileallusers());
 		} else {
@@ -150,20 +162,20 @@ public class UserSkills {
 
 	}
 
-
-	/**@When("JSON schema is valid")
-	public void json_schema_is_valid() {
-		System.out.println(this.lmsPojo.getRes_response());
-		this.lmsPojo.getStr_SchemaFilePath();
-		//this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
-		if (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) {
-			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-					this.lmsPojo.getStr_SchemaFileallusers());
-		} else {
-			System.out.println("Schema not valid");
-		}
-
-	}*/
+	/**
+	 * @When("JSON schema is valid") public void json_schema_is_valid() {
+	 * System.out.println(this.lmsPojo.getRes_response());
+	 * this.lmsPojo.getStr_SchemaFilePath();
+	 * //this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
+	 * if
+	 * (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(),
+	 * 200)) {
+	 * JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
+	 * this.lmsPojo.getStr_SchemaFileallusers()); } else {
+	 * System.out.println("Schema not valid"); }
+	 * 
+	 * }
+	 */
 
 	@Then("User validates StatusCode")
 	public void user_receives_status_code() throws InvalidFormatException, IOException {
@@ -273,26 +285,29 @@ public class UserSkills {
 			}
 		}
 	}
-	
+
 	@And("check the Database to validate deletion")
 	public void check_the_Database_to_validate_deletion() {
-	 
-		this.lmsPojo.setStr_Query( "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='" +  this.lmsPojo.getStr_userskillsid() + "'" + ")");
-		//str_Query= "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='" +  this.lmsPojo.getStr_userskillsid() + "'" + ")";
-		//Boolean Output=Fetch_Boolean_Data_From_SQL.connect(str_DBURL, str_DBUserName, str_DBPWD, str_Query, str_userskillsid);
-		Boolean Output=Fetch_Data_From_SQL.connect_delete(this.lmsPojo.getStr_DBURL(), this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(),this.lmsPojo.getStr_Query(), this.lmsPojo.getStr_userskillsid());
-		
-		 if (Output == true) {
-				
-				System.out.println("Success");
-		
 
-			} else {
-				
-				System.out.println("Failed to delete");
-				}
-				
-				
-			}
+		this.lmsPojo.setStr_Query("SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
+				+ this.lmsPojo.getStr_userskillsid() + "'" + ")");
+		// str_Query= "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE
+		// user_skill_id='" + this.lmsPojo.getStr_userskillsid() + "'" + ")";
+		// Boolean Output=Fetch_Boolean_Data_From_SQL.connect(str_DBURL, str_DBUserName,
+		// str_DBPWD, str_Query, str_userskillsid);
+		Boolean Output = Fetch_Data_From_SQL.connect_delete(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), this.lmsPojo.getStr_Query(),
+				this.lmsPojo.getStr_userskillsid());
+
+		if (Output == true) {
+
+			System.out.println("Success");
+
+		} else {
+
+			System.out.println("Failed to delete");
+		}
+
+	}
 
 }

@@ -24,9 +24,7 @@ public class LMSPojo {
 	private String str_userskillsid;
 	private int status_code;
 	private String status_message;
-
-	
-	
+	private String numericColumns;
 	public String getStr_SchemaFilePath() {
 		return str_SchemaFilePath;
 	}
@@ -39,7 +37,6 @@ public class LMSPojo {
 	public void setStr_SchemaFileallusers(String str_SchemaFileallusers) {
 		this.str_SchemaFileallusers = str_SchemaFileallusers;
 	}
-	
 	public String getExcelPath() {
 		return excelPath;
 	}
@@ -142,8 +139,14 @@ public class LMSPojo {
 	public void setStatus_message(String status_message) {
 		this.status_message = status_message;
 	}
-	
-	
+	public String getNumericColumns() {
+		return numericColumns;
+	}
+	public void setNumericColumns(String numericColumns) {
+		this.numericColumns = numericColumns;
+	}
 
+	
+	
 	
 }

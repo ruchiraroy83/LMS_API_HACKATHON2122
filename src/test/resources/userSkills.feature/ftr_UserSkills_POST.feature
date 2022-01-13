@@ -15,4 +15,4 @@ Scenario Outline: Validate POST all UserSkills when user logged in as "<UserName
     |InputData_UserSkills_POST|4|
     |InputData_UserSkills_POST|5|
     |InputData_UserSkills_POST|6|
-   
+

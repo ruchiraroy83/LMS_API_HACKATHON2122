@@ -14,6 +14,7 @@ Scenario: Validate GET all UserSkills when user logged in as "<UserName>" with "
     Then User validates StatusCode and StatusMessage from "<SheetName>" and <RowNumber>
     And User should receive a list of users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp
     And check the Database
+    And Test
     Examples: 
     |SheetName|RowNumber|
     |InputData_UserSkills_GET|0|

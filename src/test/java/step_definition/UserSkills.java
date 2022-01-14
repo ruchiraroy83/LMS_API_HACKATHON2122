@@ -87,7 +87,7 @@ public class UserSkills {
 
 	}
 
-	@When("User sends POST request body from {string} and {int}")
+	@When("User sends POST request body from {string} and {int} with valid JSON Schema")
 	public void user_sends_POST_request_body_from(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
 
@@ -152,32 +152,29 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 	}
 
-	@When("JSON schema is valid")
-	public void json_schema_is_valid() {
-		System.out.println(this.lmsPojo.getRes_response());
-		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
-		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
-				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-					this.lmsPojo.getStr_SchemaFileallusers());
-		}
+//	@When("JSON schema is valid")
+//	public void json_schema_is_valid() {
+//		System.out.println(this.lmsPojo.getRes_response());
+//		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
+//		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+//				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
+//			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
+//					this.lmsPojo.getStr_SchemaFileallusers());
+//		}
+		
+		@Then("JSON schema is valid")
+		public void json_schema_is_valid() {
+			System.out.println(this.lmsPojo.getRes_response());
+			this.lmsPojo.setStr_SchemaFileallusers("ftr_UserSkills_POST.json");
+			if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+					&& (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
+				JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
+						this.lmsPojo.getStr_SchemaFileallusers());
+			}
 
 	}
 
-	/**
-	 * @When("JSON schema is valid") public void json_schema_is_valid() {
-	 * System.out.println(this.lmsPojo.getRes_response());
-	 * this.lmsPojo.getStr_SchemaFilePath();
-	 * //this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
-	 * if
-	 * (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(),
-	 * 200)) {
-	 * JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-	 * this.lmsPojo.getStr_SchemaFileallusers()); } else {
-	 * System.out.println("Schema not valid"); }
-	 * 
-	 * }
-	 */
+
 
 	@Then("User validates StatusCode")
 	public void user_receives_status_code() throws InvalidFormatException, IOException {

@@ -29,6 +29,8 @@ import util.Fetch_Data_From_SQL;
 import util.JSON_Schema_Validation;
 import util.LMSPojo;
 import util.Send_Request_For_Method;
+import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 
 public class UserSkills {
 	private LMSPojo lmsPojo;
@@ -154,8 +156,8 @@ public class UserSkills {
 	public void json_schema_is_valid() {
 		System.out.println(this.lmsPojo.getRes_response());
 		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
-		if ((this.lmsPojo.getRes_response().getStatusCode() == 200)
-				|| (this.lmsPojo.getRes_response().getStatusCode() == 201)) {
+		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 					this.lmsPojo.getStr_SchemaFileallusers());
 		}
@@ -180,6 +182,7 @@ public class UserSkills {
 	@Then("User validates StatusCode")
 	public void user_receives_status_code() throws InvalidFormatException, IOException {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
+		
 	}
 
 	@Then("User validates StatusCode and StatusMessage from {string} and {int}")

@@ -10,7 +10,6 @@ public class JSON_Schema_Validation {
 
 		public static void cls_JSON_SchemaValidation(Response response, String fileName) {
 		
-		System.out.println(fileName);
 		_resp = response.then();
 		_resp.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(fileName));
 		

@@ -1,6 +1,6 @@
 package util;
 
-import static util.constant.LMSApiConstant.CONST_SENARIO;
+import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
@@ -48,44 +48,37 @@ public class Send_Request_For_Method {
 	public Response Sent_request(String strURL, RequestSpecification httpRequest, HttpMethod httpmethod,
 			String ExcelPath, String SheetName, int rowNumber) throws InvalidFormatException, IOException {
 		Response response = null;
-
+		String numericColumns = this.lmsPojo.getNumericColumns();
 		switch (httpmethod) {
 		case POST:
-
-			// Request object
-
-			System.out.println("Inside method excel path is :" + ExcelPath);
-			// Request payload sending along with POST request
 			ExcelReader reader = new ExcelReader();
-			// ArrayList<String> colList =
-			// reader.getColumnNames("./src/test/resources/"+ExcelPath, SheetName);
 			List<Map<String, String>> excelRows = reader.getData("./" + ExcelPath, SheetName);
 			Map<String, Object> finalMap = new HashMap<>();
 
 			Map<String, String> row = excelRows.get(rowNumber);
-			row.remove(CONST_SENARIO);
+			row.remove(CONST_SCENARIO);
 			row.remove(CONST_STATUS_CODE);
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
-
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
-				String numericColumns = this.lmsPojo.getNumericColumns();
+				
+
 				if (numericColumns.contains(entry.getKey())) {
-					value = (StringUtils.isEmpty(entry.getValue()) || StringUtils.isAlphanumeric(entry.getValue()))
-							? entry.getValue()
-							: Integer.parseInt(entry.getValue());
+					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
+							? Integer.parseInt(entry.getValue())
+							: entry.getValue();
 				}
 				finalMap.put(entry.getKey(), value);
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			String requestString = mapper.writeValueAsString(finalMap);
-			System.out.println("Request :" + requestString);
+			System.out.println("URL: " + strURL + "\nRequest :" + requestString);
 
 			response = httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON).body(requestString).post(strURL);
 
 			if (response != null) {
-				System.out.println("Response :" + response.asString());
+				System.out.println("Response :\n" + response.asString());
 
 				Map<String, Object> unmatchedFields = getUnMatchedFields(requestString, response.asString());
 
@@ -101,11 +94,6 @@ public class Send_Request_For_Method {
 
 		case PUT:
 
-			System.out.println("Inside method excel path is :" + ExcelPath);
-			// Request payload sending along with POST request
-
-			// ArrayList<String> colList =
-			// reader.getColumnNames("./src/test/resources/"+ExcelPath, SheetName);
 			ExcelReader reader_put = new ExcelReader();
 
 			List<Map<String, String>> excelRows_put = reader_put.getData("./" + ExcelPath, SheetName);
@@ -115,32 +103,23 @@ public class Send_Request_For_Method {
 
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
-				String numericColumns = this.lmsPojo.getNumericColumns();
+
 				if (numericColumns.contains(entry.getKey())) {
-					value = (StringUtils.isEmpty(entry.getValue()) || StringUtils.isAlphanumeric(entry.getValue()))
-							? entry.getValue()
-							: Integer.parseInt(entry.getValue());
+					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
+							? Integer.parseInt(entry.getValue())
+							: entry.getValue();
 				}
 				finalMap_put.put(entry.getKey(), value);
 			}
 			ObjectMapper mapper_put = new ObjectMapper();
 			String requestString_put = mapper_put.writeValueAsString(finalMap_put);
-			System.out.println("Request string is:" + requestString_put);
+			System.out.println("URL: " + strURL + "\nRequest :\n" + requestString_put);
 			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);
 			httpRequest.body(requestString_put);
-			System.out.println("Put Request :" + requestString_put);
-			System.out.println("URL is " + strURL);
 			response = httpRequest.put(strURL);
 
 			if (response != null) {
-				System.out.println("Response :" + response.asString());
-
-				Map responseMap = mapper_put.readValue(response.asString(), Map.class);
-				if (responseMap.get("user_skill_id") != null) {
-					String userSkillId = (String) responseMap.get("user_skill_id");
-
-				}
-				System.out.println(responseMap);
+				System.out.println("Response :\n" + response.asString());
 			}
 			break;
 
@@ -164,18 +143,18 @@ public class Send_Request_For_Method {
 		return response;
 	}
 
-	public boolean check_response_code(Response response, int Status_Code) {
-		int statusCode = response.getStatusCode();
-
-		if (statusCode == Status_Code) {
-			System.out.println("Response code matches with the expected output response code");
-			return true;
-		} else {
-			System.out.println("Response code does not matches with the expected output response code");
-			return false;
-		}
-
-	}
+//	public boolean check_response_code(Response response, int Status_Code) {
+//		int statusCode = response.getStatusCode();
+//
+//		if (statusCode == Status_Code) {
+//			System.out.println("Response code matches with the expected output response code");
+//			return true;
+//		} else {
+//			System.out.println("Response code does not matches with the expected output response code");
+//			return false;
+//		}
+//
+//	}
 
 	private Map<String, Object> getUnMatchedFields(String requestString, String responseString) {
 		ObjectMapper mapper = new ObjectMapper();

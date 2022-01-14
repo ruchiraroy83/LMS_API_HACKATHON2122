@@ -1,18 +1,18 @@
 Feature: To check The GET method for UserSkills
-Scenario: Validate GET all UserSkills when user logged in as "<UserName>" with "<Password>"
-    Given User is on Endpoint: url/UserSkills
+Background:
+	Given User is on Endpoint: url/UserSkills with valid username and password
+Scenario: Validate GET all UserSkills
     When User sends GET request
-    And JSON schema is valid
     Then User validates StatusCode
-    And User should receive a list of users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp
+    And JSON schema is valid
+    And User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp
     And check the Database for all users
     
- Scenario Outline: Validate USERSkills Api with specific ID  when User logged in with valid UserName & Password
-    Given User is on Endpoint: url/UserSkills
+ Scenario Outline: Validate UserSkills Api with specific ID  
     When User sends GET request on  id from "<SheetName>" and <RowNumber>
-    And JSON schema is valid
     Then User validates StatusCode and StatusMessage from "<SheetName>" and <RowNumber>
-    And User should receive a list of users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp
+    And JSON schema is valid
+    And User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from "<SheetName>" and <RowNumber>
     And check the Database
     Examples: 
     |SheetName|RowNumber|

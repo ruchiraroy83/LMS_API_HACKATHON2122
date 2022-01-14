@@ -1,16 +1,20 @@
 package step_definition;
 
+import static org.junit.Assert.assertFalse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
 import io.cucumber.java.en.And;
@@ -18,36 +22,45 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
-import util.Capturing_Actual_Output;
+import io.restassured.response.ResponseBody;
 import util.ExcelReader;
 import util.Fetch_Data_From_Properties_File;
 import util.Fetch_Data_From_SQL;
 import util.JSON_Schema_Validation;
 import util.LMSPojo;
 import util.Send_Request_For_Method;
+import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 
 public class UserSkills {
-	private LMSPojo lmsPojo ;
+	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		Fetch_Data_From_Properties_File data_From_Properties_File= new Fetch_Data_From_Properties_File();
-		this. lmsPojo = data_From_Properties_File.getLmsPojo();
-		this.send_Request_For_Method= new Send_Request_For_Method();
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File();
+		this.lmsPojo = data_From_Properties_File.getLmsPojo();
+		this.send_Request_For_Method = new Send_Request_For_Method();
 	}
 
-	@Given("User is on Endpoint: url\\/UserSkills")
-	public void user_is_on_endpoint_url_user_skills() throws IOException {
+	@Given("User is on Endpoint: url\\/UserSkills with valid username and password")
+	public void user_is_on_endpoint_url_user_skills_with_valid_username_and_password() throws IOException {
 		this.lmsPojo.setRequest_URL(
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
 
+//
+//	@Given("User is on Endpoint: url\\/UserSkills")
+//	public void user_is_on_endpoint_url_user_skills() throws IOException {
+//		this.lmsPojo.setRequest_URL(
+//				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
+//
+//	}
+
 	@When("User sends GET request")
 	public void user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/UserSkills");
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		Thread.sleep(2000);
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 
@@ -72,9 +85,6 @@ public class UserSkills {
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
 		this.lmsPojo.setRes_response(response);
 
-		assertNotNull(response);
-		assertNotNull(response.getBody());
-		assertNotNull( response.getStatusCode());
 	}
 
 	@When("User sends POST request body from {string} and {int}")
@@ -92,10 +102,11 @@ public class UserSkills {
 				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
 		this.lmsPojo.setRes_response(response);
 
-		assertNotNull(response);
-		assertNotNull(response.getBody());
-		assertNotNull( response.getStatusCode());
+	}
 
+	@When("request body is in valid json format")
+	public void request_body_is_in_valid_json_format() {
+		throw new io.cucumber.java.PendingException();
 	}
 
 	@When("User sends PUT request on id and request body from {string} and {int}")
@@ -116,10 +127,6 @@ public class UserSkills {
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
 		this.lmsPojo.setRes_response(response);
-
-		assertNotNull(response);
-		assertNotNull(response.getBody());
-		assertNotNull( response.getStatusCode());
 
 	}
 
@@ -143,21 +150,16 @@ public class UserSkills {
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
 		this.lmsPojo.setRes_response(response);
-		assertNotNull(response);
-		assertNotNull(response.getBody());
-		assertNotNull( response.getStatusCode());
 	}
 
 	@When("JSON schema is valid")
 	public void json_schema_is_valid() {
 		System.out.println(this.lmsPojo.getRes_response());
-		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_all_users.json");
-		if ((this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200))
-				&& (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 201))) {
+		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
+		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 					this.lmsPojo.getStr_SchemaFileallusers());
-		} else {
-			System.out.println("Schema not valid");
 		}
 
 	}
@@ -179,125 +181,163 @@ public class UserSkills {
 
 	@Then("User validates StatusCode")
 	public void user_receives_status_code() throws InvalidFormatException, IOException {
-
-		this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200);
-		this.lmsPojo.setRes_responsebody(Capturing_Actual_Output.capture_output(this.lmsPojo.getRes_response()));
-
-		System.out.println("Body is:" + this.lmsPojo.getRes_responsebody());
-
+		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
+		
 	}
 
 	@Then("User validates StatusCode and StatusMessage from {string} and {int}")
 	public void user_receives_status_code_with(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
-		System.out.println("excel path is :" + this.lmsPojo.getExcelPath());
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-		if (!StringUtils.isEmpty(testData.get(rowNumber).get("StatusCode"))) {
-			this.lmsPojo.setStatus_code(Integer.parseInt(testData.get(rowNumber).get("StatusCode")));
+		String statusCodeString = testData.get(rowNumber).get("StatusCode");
+
+		if (!StringUtils.isEmpty(statusCodeString)) {
+			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
 		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("StatusMessage"));
-		System.out.println(this.lmsPojo.getStatus_message());
-		System.out.println(rowNumber);
-		this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), this.lmsPojo.getStatus_code());
-		this.lmsPojo.setRes_responsebody(Capturing_Actual_Output.capture_output(this.lmsPojo.getRes_response()));
 
-		System.out.println(this.lmsPojo.getStatus_code());
-		if (this.lmsPojo.getStatus_message() != "") {
-			System.out.println("Body is:" + this.lmsPojo.getRes_responsebody());
+		Response response = this.lmsPojo.getRes_response();
 
-			if (this.lmsPojo.getRes_responsebody().equals(this.lmsPojo.getStatus_message())) {
-				System.out.println("Status message is checked successfully");
+		assertNotNull(response);
+		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
-			}
-		}
+		Map<String, Object> jsonMap = extractResponse(response);
+
+		assertFalse(jsonMap.isEmpty());
+		assertNotNull(jsonMap.get("message"));
+		assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
+
+		// this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(),
+		// this.lmsPojo.getStatus_code());
+//		this.lmsPojo.setRes_responsebody(Capturing_Actual_Output.capture_output(this.lmsPojo.getRes_response()));
+//
+//		if (this.lmsPojo.getStatus_message() != "") {
+//			System.out.println("Body is:" + this.lmsPojo.getRes_responsebody());
+//
+//			if (this.lmsPojo.getRes_responsebody().equals(this.lmsPojo.getStatus_message())) {
+//				System.out.println("Status message is checked successfully");
+//
+//			}
+//		}
 
 	}
 
-	@Then("User should receive a list of users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp")
-	public void user_should_receive_a_list_of_users_with_skills_in_json_body_with_the_fields_user_skill_id_user_id_skill_id_months_of_exp() {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Map<String, Object> extractResponse(Response response) {
+		ResponseBody responseBody = response.getBody();
+		assertNotNull(responseBody);
+		Map<String, Object> jsonMap = null;
+		ObjectMapper mapper_UserSkills = new ObjectMapper();
+		try {
+			jsonMap = mapper_UserSkills.readValue(responseBody.asString(), Map.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonMap;
+	}
 
-		if ((this.lmsPojo.getRes_responsebody().contains("user_skill_id"))
-				&& (this.lmsPojo.getRes_responsebody().contains("user_id"))
-				&& (this.lmsPojo.getRes_responsebody().contains("Skill_id"))
-				&& (this.lmsPojo.getRes_responsebody().contains("months_of_exp"))) {
-			System.out.println(
-					"Users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp is received successfully");
+	@Then("User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from {string} and {int}")
+	public void user_should_receive_a_list_of_users_with_skills_in_json_body_with_the_fields_user_skill_id_user_id_skill_id_months_of_exp_from_and(
+			String sheetName, int rowNumber) throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+
+		Map<String, String> row = testData.get(rowNumber);
+		for (Map.Entry<String, String> entry : row.entrySet()) {
+			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
+				if (mapResponse.getKey() == entry.getKey()) {
+					assertEquals(mapResponse.getKey(), entry.getKey());
+				}
+
+			}
 		}
 
 	}
 
 	@And("^check the Database$")
 	public void check_the_database() {
-		this.lmsPojo.setStr_Query(
-				"select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map where user_skill_id='"
-						+ this.lmsPojo.getStr_userskillsid() + "'");
-		String[] OutputArray = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
-				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), this.lmsPojo.getStr_Query());
-		if (OutputArray == null) {
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+		String queryString = "select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map where user_skill_id='"
+				+ jsonMap.get("user_skill_id") + "'";
+
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+
+		if (queryResult == null || queryResult.isEmpty()) {
 
 			System.out.println("No records found");
 
 		} else {
-			int int_Arraylen = OutputArray.length;
-			int k = 0;
-			for (int i = 0; i < int_Arraylen; i++) {
-				if (this.lmsPojo.getRes_responsebody().trim().contains(OutputArray[i].trim())) {
-					k++;
+			for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
+				for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
+					if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
+						Object obj = jsonMapFinal.getValue();
+						
+						if(obj!=null && obj instanceof Integer) {
+							assertEquals(Integer.toString((Integer)jsonMapFinal.getValue()), queryResultFinal.getValue());
+							
+						}else {
+							assertEquals((String)jsonMapFinal.getValue(), queryResultFinal.getValue());
+						}
+					}
 				}
-			}
 
-			if (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) {
-				if (k == int_Arraylen) {
-					System.out.println("All the fields matched with database");
-				} else {
-					System.out.println("Database validation failed");
-				}
 			}
 		}
 	}
 
 	@And("check the Database for all users")
 	public void check_the_database_for_all_users() {
-		this.lmsPojo.setStr_Query("select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map");
-		String[] OutputArray = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
-				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), this.lmsPojo.getStr_Query());
-		if (OutputArray == null) {
+		 String getStr_Query="select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map";
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), getStr_Query);
+
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+
+		if (queryResult == null || queryResult.isEmpty()) {
 
 			System.out.println("No records found");
 
 		} else {
-			int int_Arraylen = OutputArray.length;
-			int k = 0;
-			for (int i = 0; i < int_Arraylen; i++) {
-				if (this.lmsPojo.getRes_responsebody().trim().contains(OutputArray[i].trim())) {
-					k++;
+			for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
+				for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
+					if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
+						Object obj = jsonMapFinal.getValue();
+						
+						if(obj!=null && obj instanceof Integer) {
+							assertEquals(Integer.toString((Integer)jsonMapFinal.getValue()), queryResultFinal.getValue());
+							
+						}else {
+							assertEquals((String)jsonMapFinal.getValue(), queryResultFinal.getValue());
+						}
+					}
 				}
-			}
 
-			if (this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(), 200)) {
-				if (k == int_Arraylen) {
-					System.out.println("All the fields matched with database");
-				} else {
-					System.out.println("Database validation failed");
-				}
 			}
 		}
 	}
 
 	@And("check the Database to validate deletion")
 	public void check_the_Database_to_validate_deletion() {
+		
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
+				+ jsonMap.get("user_skill_id") + "'";
 
-		this.lmsPojo.setStr_Query("SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
-				+ this.lmsPojo.getStr_userskillsid() + "'" + ")");
-		// str_Query= "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE
-		// user_skill_id='" + this.lmsPojo.getStr_userskillsid() + "'" + ")";
-		// Boolean Output=Fetch_Boolean_Data_From_SQL.connect(str_DBURL, str_DBUserName,
-		// str_DBPWD, str_Query, str_userskillsid);
-		Boolean Output = Fetch_Data_From_SQL.connect_delete(this.lmsPojo.getStr_DBURL(),
-				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), this.lmsPojo.getStr_Query(),
-				this.lmsPojo.getStr_userskillsid());
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+		Boolean Output;
+		if (queryResult == null || queryResult.isEmpty()) {
+
+			Output=true;
+		}else {
+			Output=false;
+		}
+
 
 		if (Output == true) {
 

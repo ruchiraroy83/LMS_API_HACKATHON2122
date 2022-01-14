@@ -1,11 +1,14 @@
 Feature: To check The POST method for UserSkills
-Scenario Outline: Validate POST all UserSkills when user logged in as "<UserName>" with "<Password>"
-    Given User is on Endpoint: url/UserSkills
+Background:
+	Given User is on Endpoint: url/UserSkills with valid username and password
+	
+Scenario Outline: Validate POST all UserSkills    
     When User sends POST request body from "<SheetName>" and <RowNumber>
+		And  request body is in valid json format
+    Then User validates StatusCode and StatusMessage from "<SheetName>" and <RowNumber>
     And JSON schema is valid
-    Then User validates StatusCode
-    And User should receive a list of users with skills in JSON body with the fields - user_skill_id,user_id,Skill_Id,months_of_exp
-    And check the Database for all users
+    And User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from "<SheetName>" and <RowNumber>
+    And check the Database
   Examples: 
     |SheetName|RowNumber|
     |InputData_UserSkills_POST|0|
@@ -15,4 +18,7 @@ Scenario Outline: Validate POST all UserSkills when user logged in as "<UserName
     |InputData_UserSkills_POST|4|
     |InputData_UserSkills_POST|5|
     |InputData_UserSkills_POST|6|
+    |InputData_UserSkills_POST|7|
+    |InputData_UserSkills_POST|8|
+    |InputData_UserSkills_POST|9|
 

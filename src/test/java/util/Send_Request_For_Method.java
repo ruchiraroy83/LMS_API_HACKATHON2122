@@ -42,7 +42,7 @@ public class Send_Request_For_Method {
 	public static RequestSpecification request_URL(String Username, String Password) {
 
 		// Request object
-		return RestAssured.given().auth().basic(Username, Password);
+		return RestAssured.given().auth().preemptive().basic(Username, Password);
 
 	}
 

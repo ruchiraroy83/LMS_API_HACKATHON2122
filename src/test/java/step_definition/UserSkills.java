@@ -116,8 +116,6 @@ public class UserSkills {
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		System.out.println(this.lmsPojo.getStr_FinalURI());
-		System.out.println("Req URL:" + this.lmsPojo.getRequest_URL());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
@@ -135,12 +133,9 @@ public class UserSkills {
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("user_skill_id"));
 
 		// str_userskillsid = testData.get(rowNumber).get("user_skill_id");
-		System.out.println(this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		System.out.println(this.lmsPojo.getStr_FinalURI());
-		System.out.println(this.lmsPojo.getRequest_URL());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
@@ -159,10 +154,9 @@ public class UserSkills {
 
 	@Then("JSON schema is valid")
 	public void json_schema_is_valid() {
-		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
+		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-			System.out.println("USER Skills SChema file is" + this.lmsPojo.getStr_SchemaFileallusers());
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 					this.lmsPojo.getStr_SchemaFileallusers());
 		}

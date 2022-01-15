@@ -4,7 +4,7 @@ Background:
 	
 Scenario Outline: Validate the delete method for UserSkills
     When User sends request id ON DELETE Method from "<sheetName>" and <rowNumber>
-    Then User validates StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
+    Then User validates StatusCode and StatusMessage from "<sheetName>" sheet and <rowNumber> row
     And check the Database to validate deletion
     
     Examples:

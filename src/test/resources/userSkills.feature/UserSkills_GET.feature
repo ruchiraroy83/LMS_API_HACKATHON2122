@@ -5,12 +5,11 @@ Scenario: Validate GET all UserSkills
     When User sends GET request
     Then User validates StatusCode
     And JSON schema is valid
-    And User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp
-    And check the Database for all users
-    
- Scenario Outline: Validate UserSkills Api with specific ID  
+    And check the Database for userSkills
+	
+	Scenario Outline: Validate UserSkills Api with specific ID  
     When User sends GET request on  id from "<SheetName>" and <RowNumber>
-    Then User validates StatusCode and StatusMessage from "<SheetName>" and <RowNumber>
+    Then User validates StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And JSON schema is valid
     And User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from "<SheetName>" and <RowNumber>
     And check the Database
@@ -22,4 +21,5 @@ Scenario: Validate GET all UserSkills
    	|InputData_UserSkills_GET|3|
    	|InputData_UserSkills_GET|4|
    	|InputData_UserSkills_GET|5|
-   	|InputData_UserSkills_GET|6|
+    
+ 

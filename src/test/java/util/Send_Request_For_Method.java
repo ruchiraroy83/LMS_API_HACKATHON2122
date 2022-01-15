@@ -4,6 +4,9 @@ import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USERSKILL_GET_SCHEMA;
+import static util.constant.LMSApiConstant.CONST_USERSKILL_POST_REQ_SCHEMA;
+import static util.constant.LMSApiConstant.CONST_USERSKILL_POST_RESP_SCHEMA;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.core.options.CurlOption.HttpMethod;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.internal.path.json.JSONAssertion;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -73,7 +77,7 @@ public class Send_Request_For_Method {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			String requestString = mapper.writeValueAsString(finalMap);
-			System.out.println("URL: " + strURL + "\nRequest :" + requestString);
+			
 
 			response = httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON).body(requestString).post(strURL);
 

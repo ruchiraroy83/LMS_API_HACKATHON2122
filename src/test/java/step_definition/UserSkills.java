@@ -69,17 +69,13 @@ public class UserSkills {
 	@When("User sends GET request on  id from {string} and {int}")
 	public void user_sends_request_with_specific(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
-		System.out.println("eexcel path is :" + this.lmsPojo.getExcelPath());
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("UserSkills_ID"));
-		System.out.println(this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		System.out.println(this.lmsPojo.getStr_FinalURI());
-		System.out.println(this.lmsPojo.getRequest_URL());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
@@ -92,12 +88,8 @@ public class UserSkills {
 			throws IOException, InvalidFormatException, InterruptedException {
 
 		this.lmsPojo.setStr_basePath("/UserSkills");
-
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		System.out.println(this.lmsPojo.getStr_FinalURI());
 
-		System.out.println("excel path is :" + this.lmsPojo.getExcelPath() + ", SheetName is:" + sheetName
-				+ ",Row number is:" + rowNumber);
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
 		this.lmsPojo.setRes_response(response);
@@ -112,9 +104,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("UserSkills_ID"));
-		System.out.println(this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
-
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -131,10 +121,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("user_skill_id"));
-
-		// str_userskillsid = testData.get(rowNumber).get("user_skill_id");
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
-
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -142,19 +129,23 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 	}
 
-//	@When("JSON schema is valid")
-//	public void json_schema_is_valid() {
-//		System.out.println(this.lmsPojo.getRes_response());
-//		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
-//		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
-//				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-//			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-//					this.lmsPojo.getStr_SchemaFileallusers());
-//		}
-
-	@Then("JSON schema is valid")
+	@When("JSON schema is valid")
 	public void json_schema_is_valid() {
-		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
+		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_all.json");
+		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),this.lmsPojo.getStr_SchemaFileallusers());
+		}
+
+	@Then("JSON schema is valid for {string}")
+	public void json_schema_is_valid_for(String Method) {
+		System.out.println(Method);
+		switch (Method) {
+		case "GET":
+			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET.json");
+		case "POST":
+			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
+		case "PUT":
+			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
+		}
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
@@ -195,18 +186,6 @@ public class UserSkills {
 		assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
 
-		// this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(),
-		// this.lmsPojo.getStatus_code());
-//		this.lmsPojo.setRes_responsebody(Capturing_Actual_Output.capture_output(this.lmsPojo.getRes_response()));
-//
-//		if (this.lmsPojo.getStatus_message() != "") {
-//			System.out.println("Body is:" + this.lmsPojo.getRes_responsebody());
-//
-//			if (this.lmsPojo.getRes_responsebody().equals(this.lmsPojo.getStatus_message())) {
-//				System.out.println("Status message is checked successfully");
-//
-//			}
-//		}
 
 	}
 

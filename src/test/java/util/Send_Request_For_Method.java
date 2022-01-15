@@ -90,7 +90,6 @@ public class Send_Request_For_Method {
 					ExcelWriter writer = new ExcelWriter();
 					boolean status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
 							map.getValue());
-					System.out.println("File Updated with " + map.getKey() + ": " + map.getValue() + "? " + status);
 				}
 
 			}
@@ -117,7 +116,6 @@ public class Send_Request_For_Method {
 			}
 			ObjectMapper mapper_put = new ObjectMapper();
 			String requestString_put = mapper_put.writeValueAsString(finalMap_put);
-			System.out.println("URL: " + strURL + "\nRequest :\n" + requestString_put);
 			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);
 			httpRequest.body(requestString_put);
 			response = httpRequest.put(strURL);
@@ -147,18 +145,6 @@ public class Send_Request_For_Method {
 		return response;
 	}
 
-//	public boolean check_response_code(Response response, int Status_Code) {
-//		int statusCode = response.getStatusCode();
-//
-//		if (statusCode == Status_Code) {
-//			System.out.println("Response code matches with the expected output response code");
-//			return true;
-//		} else {
-//			System.out.println("Response code does not matches with the expected output response code");
-//			return false;
-//		}
-//
-//	}
 
 	private Map<String, Object> getUnMatchedFields(String requestString, String responseString) {
 		ObjectMapper mapper = new ObjectMapper();

@@ -104,12 +104,7 @@ public class UserSkills {
 
 	}
 
-	@When("request body is in valid json format")
-	public void request_body_is_in_valid_json_format() {
-		throw new io.cucumber.java.PendingException();
-	}
-
-	@When("User sends PUT request on id and request body from {string} and {int}")
+	@When("User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
 	public void user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException {
 
@@ -161,33 +156,33 @@ public class UserSkills {
 //			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 //					this.lmsPojo.getStr_SchemaFileallusers());
 //		}
-		
-		@Then("JSON schema is valid")
-		public void json_schema_is_valid() {
-			System.out.println(this.lmsPojo.getRes_response());
-			this.lmsPojo.setStr_SchemaFileallusers("ftr_UserSkills_POST.json");
-			if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
-					&& (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-				JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-						this.lmsPojo.getStr_SchemaFileallusers());
-			}
+
+	@Then("JSON schema is valid")
+	public void json_schema_is_valid() {
+		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_users.json");
+		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
+			System.out.println("USER Skills SChema file is" + this.lmsPojo.getStr_SchemaFileallusers());
+			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
+					this.lmsPojo.getStr_SchemaFileallusers());
+		}
 
 	}
-
-
 
 	@Then("User validates StatusCode")
 	public void user_receives_status_code() throws InvalidFormatException, IOException {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
-		
+
 	}
 
-	@Then("User validates StatusCode and StatusMessage from {string} and {int}")
+	@Then("User validates StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_receives_status_code_with(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-		String statusCodeString = testData.get(rowNumber).get("StatusCode");
+
+		Map<String, String> scenario = testData.get(rowNumber);
+		String statusCodeString = scenario.get("StatusCode");
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
@@ -201,10 +196,10 @@ public class UserSkills {
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
 		Map<String, Object> jsonMap = extractResponse(response);
-
-		assertFalse(jsonMap.isEmpty());
-		assertNotNull(jsonMap.get("message"));
+		assertNotNull(jsonMap);
+		if (this.lmsPojo.getStatus_message()!="") {
 		assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
+		}
 
 		// this.send_Request_For_Method.check_response_code(this.lmsPojo.getRes_response(),
 		// this.lmsPojo.getStatus_code());
@@ -226,11 +221,11 @@ public class UserSkills {
 		ResponseBody responseBody = response.getBody();
 		assertNotNull(responseBody);
 		Map<String, Object> jsonMap = null;
-		ObjectMapper mapper_UserSkills = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 		try {
-			jsonMap = mapper_UserSkills.readValue(responseBody.asString(), Map.class);
-		} catch (Exception e) {
-			e.printStackTrace();
+			jsonMap = mapper.readValue(responseBody.asString(), Map.class);
+		} catch (JsonProcessingException e) {
+			//System.err.println(e.getMessage());
 		}
 		return jsonMap;
 	}
@@ -273,12 +268,13 @@ public class UserSkills {
 				for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
 					if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
 						Object obj = jsonMapFinal.getValue();
-						
-						if(obj!=null && obj instanceof Integer) {
-							assertEquals(Integer.toString((Integer)jsonMapFinal.getValue()), queryResultFinal.getValue());
-							
-						}else {
-							assertEquals((String)jsonMapFinal.getValue(), queryResultFinal.getValue());
+
+						if (obj != null && obj instanceof Integer) {
+							assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
+									queryResultFinal.getValue());
+
+						} else {
+							assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
 						}
 					}
 				}
@@ -287,9 +283,9 @@ public class UserSkills {
 		}
 	}
 
-	@And("check the Database for all users")
+	@And("check the Database for userSkills")
 	public void check_the_database_for_all_users() {
-		 String getStr_Query="select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map";
+		String getStr_Query = "select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map";
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), getStr_Query);
 
@@ -304,12 +300,13 @@ public class UserSkills {
 				for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
 					if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
 						Object obj = jsonMapFinal.getValue();
-						
-						if(obj!=null && obj instanceof Integer) {
-							assertEquals(Integer.toString((Integer)jsonMapFinal.getValue()), queryResultFinal.getValue());
-							
-						}else {
-							assertEquals((String)jsonMapFinal.getValue(), queryResultFinal.getValue());
+
+						if (obj != null && obj instanceof Integer) {
+							assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
+									queryResultFinal.getValue());
+
+						} else {
+							assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
 						}
 					}
 				}
@@ -320,7 +317,7 @@ public class UserSkills {
 
 	@And("check the Database to validate deletion")
 	public void check_the_Database_to_validate_deletion() {
-		
+
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
 				+ jsonMap.get("user_skill_id") + "'";
@@ -330,11 +327,10 @@ public class UserSkills {
 		Boolean Output;
 		if (queryResult == null || queryResult.isEmpty()) {
 
-			Output=true;
-		}else {
-			Output=false;
+			Output = true;
+		} else {
+			Output = false;
 		}
-
 
 		if (Output == true) {
 

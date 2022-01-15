@@ -59,8 +59,9 @@ public class ExcelReader {
 		if (headerRowNumber != -1) {
 			int totalColumn = sheet.getRow(headerRowNumber).getLastCellNum();
 			int setCurrentRow = 1;
-			for (int currentRow = setCurrentRow; currentRow <= totalRow; currentRow++) {
-				row = getRow(sheet, sheet.getFirstRowNum() + currentRow);
+			for (int currentRow = setCurrentRow; currentRow < totalRow; currentRow++) {
+				int rowNumber = sheet.getFirstRowNum() + currentRow;
+				row = getRow(sheet, rowNumber);
 				LinkedHashMap<String, String> columnMapdata = new LinkedHashMap<String, String>();
 				for (int currentColumn = 0; currentColumn < totalColumn; currentColumn++) {
 					columnMapdata.putAll(getCellValue(sheet, row, currentColumn));

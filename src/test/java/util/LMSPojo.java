@@ -7,7 +7,9 @@ public class LMSPojo {
 	private String str_SchemaFilePath="user_skill_schema1.json";
 	private String str_SchemaFileallusers;
 	private String excelPath;
-
+	private String GET_SchemaFilePath;
+	private String GET_AllSchemaFilePath;
+	private String POST_SchemaFilePath;
 	private RequestSpecification request_URL;
 	private String str_baseURL;
 	private  String str_basePath;
@@ -144,6 +146,24 @@ public class LMSPojo {
 	}
 	public void setNumericColumns(String numericColumns) {
 		this.numericColumns = numericColumns;
+	}
+	public String getGET_SchemaFilePath() {
+		return GET_SchemaFilePath;
+	}
+	public void setGET_SchemaFilePath(String gET_SchemaFilePath) {
+		GET_SchemaFilePath = gET_SchemaFilePath;
+	}
+	public String getGET_AllSchemaFilePath() {
+		return GET_AllSchemaFilePath;
+	}
+	public void setGET_AllSchemaFilePath(String gET_AllSchemaFilePath) {
+		GET_AllSchemaFilePath = gET_AllSchemaFilePath;
+	}
+	public String getPOST_SchemaFilePath() {
+		return POST_SchemaFilePath;
+	}
+	public void setPOST_SchemaFilePath(String pOST_SchemaFilePath) {
+		POST_SchemaFilePath = pOST_SchemaFilePath;
 	}
 
 	

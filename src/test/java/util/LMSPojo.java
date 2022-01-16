@@ -5,7 +5,8 @@ import io.restassured.specification.RequestSpecification;
 
 public class LMSPojo {
 	private String str_SchemaFilePath="user_skill_schema1.json";
-	private String str_SchemaFileallusers;
+	private String str_Schemajsonskill="skill_schema.json";
+	
 	private String excelPath;
 	private String GET_SchemaFilePath;
 	private String GET_AllSchemaFilePath;
@@ -24,17 +25,46 @@ public class LMSPojo {
 	private String str_DBPWD;
 	private String str_Query;
 	private String str_userskillsid;
+    private String str_SchemaFileSkills;
+	
+	private String str_skillid;
+	private String str_skillname;
 	private int status_code;
 	private String status_message;
 	private String numericColumns;
+	private String str_SchemaFileallusers;
+	public String getStr_SchemaFileSkills() {
+		return str_SchemaFileSkills;
+	}
+	public void setStr_SchemaFileSkills(String str_SchemaFileSkills) {
+		this.str_SchemaFileSkills = str_SchemaFileSkills;
+	}
+	public String getStr_skillid() {
+		return str_skillid;
+	}
+	public void setStr_skillid(String str_skillid) {
+		this.str_skillid = str_skillid;
+	}
+	public String getStr_skillname() {
+		return str_skillname;
+	}
+	public void setStr_skillname(String str_skillname) {
+		this.str_skillname = str_skillname;
+	}
 	public String getStr_SchemaFilePath() {
 		return str_SchemaFilePath;
 	}
 	public void setStr_SchemaFilePath(String str_SchemaFilePath) {
 		this.str_SchemaFilePath = str_SchemaFilePath;
 	}
+	public String getStr_Schemajsonskill() {
+		return str_Schemajsonskill;
+	}
+	public void setStr_Schemajsonskill(String str_Schemajsonskill) {
+		this.str_Schemajsonskill = str_Schemajsonskill;
+	}
 	public String getStr_SchemaFileallusers() {
-		return str_SchemaFileallusers;
+		return getStr_SchemaFileallusers();
 	}
 	public void setStr_SchemaFileallusers(String str_SchemaFileallusers) {
 		this.str_SchemaFileallusers = str_SchemaFileallusers;

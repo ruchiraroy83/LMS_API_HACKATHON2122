@@ -12,6 +12,8 @@ public class LMSApiConstant {
 	public static final String CONST_USERSKILL_GET_SCHEMA = "user_skill_schema_GET_users.json";
 	public static final String CONST_USERSKILL_POST_REQ_SCHEMA = "user_skill_schema_POST_Req.json";
 	public static final String CONST_USERSKILL_POST_RESP_SCHEMA = "user_skill_schema_POST_Resp.json";
+	public static final String CONST_SKILL_ID = "Skill_Id";
+	public static final String CONST_SKILL_NAME = "Skill_name";
 	
 	
 	

@@ -37,9 +37,9 @@ public class UserSkills {
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File();
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("UserSkills");
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
-		this.send_Request_For_Method = new Send_Request_For_Method();
+		this.send_Request_For_Method = new Send_Request_For_Method("UserSkills");
 	}
 
 	@Given("User is on Endpoint: url\\/UserSkills with valid username and password")
@@ -131,21 +131,22 @@ public class UserSkills {
 
 	@When("JSON schema is valid")
 	public void json_schema_is_valid() {
-		this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET_all.json");
+		this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getGET_AllSchemaFilePath());
 		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),this.lmsPojo.getStr_SchemaFileallusers());
 		}
 
 	@Then("JSON schema is valid for {string}")
-	public void json_schema_is_valid_for(String Method) {
-		System.out.println(Method);
-		switch (Method) {
+	public void json_schema_is_valid_for(String MethodName) {
+		System.out.println(MethodName);
+		switch (MethodName) {
 		case "GET":
-			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_GET.json");
+			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getGET_SchemaFilePath());
 		case "POST":
-			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
+			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getPOST_SchemaFilePath());
 		case "PUT":
-			this.lmsPojo.setStr_SchemaFileallusers("user_skill_schema_POST_Resp.json");
+			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getPOST_SchemaFilePath());
 		}
+		System.out.println("Schema File Path is"+this.lmsPojo.getStr_SchemaFileallusers());
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),

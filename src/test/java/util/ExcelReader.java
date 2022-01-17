@@ -48,7 +48,9 @@ public class ExcelReader {
 		String path = "src/test/resources/" + excelFilePath;
 		File fileObj = new File(path);
 		String dirPath = fileObj.getAbsolutePath();
-		return WorkbookFactory.create(new File(dirPath));
+		Workbook wb= WorkbookFactory.create(new File(dirPath));
+		wb.close();
+		return wb;
 	}
 
 	private List<Map<String, String>> readSheet(Sheet sheet) {

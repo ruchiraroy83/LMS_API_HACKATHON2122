@@ -33,9 +33,9 @@ public class Send_Request_For_Method {
 	private static final String CONST_USER_SKILL_ID = "user_skill_id";
 	private LMSPojo lmsPojo;
 
-	public Send_Request_For_Method() {
+	public Send_Request_For_Method(String API_Endpoint) {
 
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File();
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(API_Endpoint);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 	}
 

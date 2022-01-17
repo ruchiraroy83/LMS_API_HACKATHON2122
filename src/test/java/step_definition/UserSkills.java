@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -42,8 +43,8 @@ public class UserSkills {
 		this.send_Request_For_Method = new Send_Request_For_Method("UserSkills");
 	}
 
-	@Given("User is on Endpoint: url\\/UserSkills with valid username and password")
-	public void user_is_on_endpoint_url_user_skills_with_valid_username_and_password() throws IOException {
+	@Given("userSkills User is on Endpoint: url\\/UserSkills with valid username and password")
+	public void userSkills_user_is_on_endpoint_url_user_skills_with_valid_username_and_password() throws IOException {
 		this.lmsPojo.setRequest_URL(
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
@@ -57,8 +58,8 @@ public class UserSkills {
 //
 //	}
 
-	@When("User sends GET request")
-	public void user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
+	@When("userSkills User sends GET request")
+	public void userSkills_user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/UserSkills");
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -66,8 +67,8 @@ public class UserSkills {
 
 	}
 
-	@When("User sends GET request on  id from {string} and {int}")
-	public void user_sends_request_with_specific(String sheetName, int rowNumber)
+	@When("userSkills User sends GET request on  id from {string} and {int}")
+	public void userSkills_user_sends_request_with_specific(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
@@ -83,8 +84,8 @@ public class UserSkills {
 
 	}
 
-	@When("User sends POST request body from {string} and {int} with valid JSON Schema")
-	public void user_sends_POST_request_body_from(String sheetName, int rowNumber)
+	@When("userSkills User sends POST request body from {string} and {int} with valid JSON Schema")
+	public void userSkills_user_sends_POST_request_body_from(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
 
 		this.lmsPojo.setStr_basePath("/UserSkills");
@@ -96,8 +97,8 @@ public class UserSkills {
 
 	}
 
-	@When("User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
-	public void user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
+	@When("userSkills User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
+	public void userSkills_user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException {
 
 		ExcelReader reader = new ExcelReader();
@@ -113,8 +114,8 @@ public class UserSkills {
 
 	}
 
-	@When("User sends request id ON DELETE Method from {string} and {int}")
-	public void user_sends_request_on_DELETE_method(String sheetName, int rowNumber)
+	@When("userSkills User sends request id ON DELETE Method from {string} and {int}")
+	public void userSkills_user_sends_request_on_DELETE_method(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException {
 
 		ExcelReader reader = new ExcelReader();
@@ -129,40 +130,47 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 	}
 
-	@When("JSON schema is valid")
-	public void json_schema_is_valid() {
-		this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getGET_AllSchemaFilePath());
-		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),this.lmsPojo.getStr_SchemaFileallusers());
-		}
+	@When("userSkills JSON schema is valid")
+	public void userSkills_json_schema_is_valid() {
+		
+		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_AllSchemaFilePath());
+		System.out.println(this.lmsPojo.getGET_AllSchemaFilePath());
+		System.out.println(this.lmsPojo.getStr_SchemaFilePath());
+		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
+				this.lmsPojo.getStr_SchemaFilePath());
+	}
 
-	@Then("JSON schema is valid for {string}")
-	public void json_schema_is_valid_for(String MethodName) {
+	@Then("userSkills JSON schema is valid for {string}")
+	public void userSkills_json_schema_is_valid_for(String MethodName) {
 		System.out.println(MethodName);
 		switch (MethodName) {
 		case "GET":
-			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getGET_SchemaFilePath());
+			this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_SchemaFilePath());
+			break;
 		case "POST":
-			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getPOST_SchemaFilePath());
+			this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getPOST_SchemaFilePath());
+			break;
 		case "PUT":
-			this.lmsPojo.setStr_SchemaFileallusers(this.lmsPojo.getPOST_SchemaFilePath());
+			this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getPOST_SchemaFilePath());
+			break;
 		}
-		System.out.println("Schema File Path is"+this.lmsPojo.getStr_SchemaFileallusers());
+		System.out.println("Schema File Path is" + this.lmsPojo.getStr_SchemaFilePath());
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-					this.lmsPojo.getStr_SchemaFileallusers());
+					this.lmsPojo.getStr_SchemaFilePath());
 		}
 
 	}
 
-	@Then("User validates StatusCode")
-	public void user_receives_status_code() throws InvalidFormatException, IOException {
+	@Then("userSkills User validates StatusCode")
+	public void userSkills_user_receives_status_code() throws InvalidFormatException, IOException {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
 
 	}
 
-	@Then("User validates StatusCode and StatusMessage from {string} sheet and {int} row")
-	public void user_receives_status_code_with(String sheetName, int rowNumber)
+	@Then("userSkills User validates StatusCode and StatusMessage from {string} sheet and {int} row")
+	public void userSkills_user_receives_status_code_with(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
@@ -183,10 +191,9 @@ public class UserSkills {
 
 		Map<String, Object> jsonMap = extractResponse(response);
 		assertNotNull(jsonMap);
-		if (this.lmsPojo.getStatus_message()!="") {
-		assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
+		if (this.lmsPojo.getStatus_message() != "") {
+			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
-
 
 	}
 
@@ -199,13 +206,13 @@ public class UserSkills {
 		try {
 			jsonMap = mapper.readValue(responseBody.asString(), Map.class);
 		} catch (JsonProcessingException e) {
-			//System.err.println(e.getMessage());
+			// System.err.println(e.getMessage());
 		}
 		return jsonMap;
 	}
 
-	@Then("User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from {string} and {int}")
-	public void user_should_receive_a_list_of_users_with_skills_in_json_body_with_the_fields_user_skill_id_user_id_skill_id_months_of_exp_from_and(
+	@Then("userSkills User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from {string} and {int}")
+	public void userSkills_user_should_receive_a_list_of_users_with_skills_in_json_body_with_the_fields_user_skill_id_user_id_skill_id_months_of_exp_from_and(
 			String sheetName, int rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
@@ -265,8 +272,7 @@ public class UserSkills {
 
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 
-		if (queryResult == null || queryResult.isEmpty()) {
-
+		if (CollectionUtils.sizeIsEmpty(queryResult)) {
 			System.out.println("No records found");
 
 		} else {
@@ -289,7 +295,7 @@ public class UserSkills {
 		}
 	}
 
-	@And("check the Database to validate deletion")
+	@And("userSkills users check the Database to validate deletion")
 	public void check_the_Database_to_validate_deletion() {
 
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());

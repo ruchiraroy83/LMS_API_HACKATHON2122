@@ -119,9 +119,9 @@ public class UserSkills {
 			throws InvalidFormatException, IOException {
 
 		ExcelReader reader = new ExcelReader();
-		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
-		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("user_skill_id"));
+		this.lmsPojo.setStr_userskillsid(DeltestData.get(rowNumber).get("user_skill_id"));
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -134,15 +134,12 @@ public class UserSkills {
 	public void userSkills_json_schema_is_valid() {
 		
 		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_AllSchemaFilePath());
-		System.out.println(this.lmsPojo.getGET_AllSchemaFilePath());
-		System.out.println(this.lmsPojo.getStr_SchemaFilePath());
 		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 				this.lmsPojo.getStr_SchemaFilePath());
 	}
 
 	@Then("userSkills JSON schema is valid for {string}")
 	public void userSkills_json_schema_is_valid_for(String MethodName) {
-		System.out.println(MethodName);
 		switch (MethodName) {
 		case "GET":
 			this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_SchemaFilePath());
@@ -154,7 +151,6 @@ public class UserSkills {
 			this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getPOST_SchemaFilePath());
 			break;
 		}
-		System.out.println("Schema File Path is" + this.lmsPojo.getStr_SchemaFilePath());
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
 			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
@@ -216,18 +212,22 @@ public class UserSkills {
 			String sheetName, int rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
+				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
+			Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 
-		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+			Map<String, String> row = testData.get(rowNumber);
+			for (Map.Entry<String, String> entry : row.entrySet()) {
+				for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
+					if (mapResponse.getKey() == entry.getKey()) {
+						assertEquals(mapResponse.getValue(), entry.getValue());
+					}
 
-		Map<String, String> row = testData.get(rowNumber);
-		for (Map.Entry<String, String> entry : row.entrySet()) {
-			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
-				if (mapResponse.getKey() == entry.getKey()) {
-					assertEquals(mapResponse.getKey(), entry.getKey());
 				}
-
 			}
+			
 		}
+		
 
 	}
 
@@ -295,12 +295,13 @@ public class UserSkills {
 		}
 	}
 
-	@And("userSkills users check the Database to validate deletion")
-	public void check_the_Database_to_validate_deletion() {
+	@And("userSkills users check the Database to validate deletion from {string} sheet and {int} row")
+	public void check_the_Database_to_validate_deletion(String sheetName,int rowNumber ) throws Throwable, IOException {
 
-		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
-				+ jsonMap.get("user_skill_id") + "'";
+				+ DeltestData.get(rowNumber).get("user_skill_id") + "'";
 
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);

@@ -11,7 +11,6 @@ Scenario: Validate GET all UserSkills
     When userSkills User sends GET request on  id from "<SheetName>" and <RowNumber>
     Then userSkills User validates StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And userSkills JSON schema is valid for "<Method>"
-    And userSkills User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from "<SheetName>" and <RowNumber>
     And check the Database
     Examples: 
     |SheetName               |RowNumber|Method|

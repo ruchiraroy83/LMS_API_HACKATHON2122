@@ -4,9 +4,6 @@ import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
-import static util.constant.LMSApiConstant.CONST_USERSKILL_GET_SCHEMA;
-import static util.constant.LMSApiConstant.CONST_USERSKILL_POST_REQ_SCHEMA;
-import static util.constant.LMSApiConstant.CONST_USERSKILL_POST_RESP_SCHEMA;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,7 +47,7 @@ public class Send_Request_For_Method {
 	// httpRequest, HttpMethod httpmethod,String strCoulumnName[], String
 	// str_Input[]) {
 	public Response Sent_request(String strURL, RequestSpecification httpRequest, HttpMethod httpmethod,
-			String ExcelPath, String SheetName, int rowNumber) throws InvalidFormatException, IOException {
+			String ExcelPath, String SheetName,int rowNumber) throws InvalidFormatException, IOException {
 		Response response = null;
 		String numericColumns = this.lmsPojo.getNumericColumns();
 		switch (httpmethod) {
@@ -88,7 +85,8 @@ public class Send_Request_For_Method {
 
 				for (Map.Entry<String, Object> map : unmatchedFields.entrySet()) {
 					ExcelWriter writer = new ExcelWriter();
-					boolean status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
+					boolean status;
+					status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
 							map.getValue());
 				}
 

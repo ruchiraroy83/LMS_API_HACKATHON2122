@@ -53,7 +53,6 @@ public class Fetch_Data_From_SQL {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (pst != null) {
@@ -127,7 +126,6 @@ public class Fetch_Data_From_SQL {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (pst != null) {
@@ -139,7 +137,6 @@ public class Fetch_Data_From_SQL {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			return QueryResult;

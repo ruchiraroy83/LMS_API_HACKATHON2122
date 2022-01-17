@@ -10,13 +10,13 @@ Scenario Outline: Validate POST all UserSkills
     And check the Database
   Examples: 
     |SheetName                |RowNumber|Method|
-    |InputData_UserSkills_POST|0        |GET|
-   	|InputData_UserSkills_POST|1        |GET|
-   	|InputData_UserSkills_POST|2        |GET|
-   	|InputData_UserSkills_POST|3        |GET|
-   	|InputData_UserSkills_POST|4        |GET|
-   	|InputData_UserSkills_POST|5        |GET|
-   	|InputData_UserSkills_POST|6        |GET|
-   	|InputData_UserSkills_POST|7        |GET|
-   	|InputData_UserSkills_POST|8        |GET|
+    |InputData_UserSkills_POST|0        |POST|
+   	|InputData_UserSkills_POST|1        |POST|
+   	|InputData_UserSkills_POST|2        |POST|
+   	|InputData_UserSkills_POST|3        |POST|
+   	|InputData_UserSkills_POST|4        |POST|
+   	|InputData_UserSkills_POST|5        |POST|
+   	|InputData_UserSkills_POST|6        |POST|
+   	|InputData_UserSkills_POST|7        |POST|
+   	|InputData_UserSkills_POST|8        |POST|
 

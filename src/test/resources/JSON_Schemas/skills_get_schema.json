@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "array": [
+    
+	{
+	    "Skill_Id": "string"
+	},
+	{
+	    "Skill_name": "string"
+    }
+  
+    
+   ]
+}   
+  

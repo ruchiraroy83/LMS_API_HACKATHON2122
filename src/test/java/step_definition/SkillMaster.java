@@ -109,7 +109,7 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 	}
 
-	@When("User sends DELETE skill id ON DELETE Method from {string} and {int}")
+	@When("skills User sends DELETE skill id ON DELETE Method from {string} and {int}")
 	public void user_sends_delete_skill_id_on_delete_method_from_and_row_number(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
@@ -123,7 +123,7 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 	}
 	
-	@Then("skills User should receive the posted skill in JSON body from {string} and {int}")
+	@Then("skills User should receive the skill in JSON body from {string} and {int}")
 	public void user_should_receive_created_skill_in_json_body_from_and(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
@@ -326,71 +326,48 @@ public class SkillMaster {
 		}
 		}
 	}
-	/*@Then("skills check the Database")
-	public void check_the_database_for_skill() throws JsonMappingException, JsonProcessingException {Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-	if (jsonMap.get("Skill_Id") != null) {
-	String queryString = "select skill_id,skill_name from tbl_lms_skill_master where skill_id='"
-			+ jsonMap.get("Skill_Id") + "'";
+	@And("skills User checks the Database to validate deletion from {string} sheet and {int} row")
+	public void skills_user_check_the_Database_to_validate_deletion(String sheetName,int rowNumber ) throws Throwable, IOException {
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		if (jsonMap.get("Skill_Id") != null) {
+		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
+				+ DeltestData.get(rowNumber).get(CONST_SKILL_ID) + "'";
 
-	Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
-			this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
-
-	if (queryResult == null || queryResult.isEmpty()) {
-
-		System.out.println("No records found");
-
-	} else {
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+		Boolean Output;
 		for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
 			for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
 				if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
 					Object obj = jsonMapFinal.getValue();
-
-					if (obj != null && obj instanceof Integer) {
-						assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
-								queryResultFinal.getValue());
-
-					} else {
-						assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
-					}
+                    assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
+					
 				}
 			}
 
 		}
-	}
-	}
-	}*/
-//	@Then("check the Database at {String} and {int} to validate the deletion")
-//	public void check_the_database_to_validate_the_deletion(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
-//		ExcelReader reader = new ExcelReader();
-//		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
-//		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-//		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
-//		System.out.println("Deleted id:" + jsonMap.get("Skill_Id"));
-//		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
-//				+ this.lmsPojo.getStr_skillid() + "'";
-//
-//		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
-//				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
-//		Boolean Output;
-//		if (queryResult == null || queryResult.isEmpty()) {
-//
-//			Output = true;
-//		} else {
-//			Output = false;
-//		}
-//
-//		if (Output == true) {
-//
-//			System.out.println("Success");
-//
-//		} else {
-//
-//			System.out.println("Failed to delete");
-//		}
-//
-//	}
-	
+		if (queryResult == null || queryResult.isEmpty()) {
+			Output = true;
+			
+			
+		} else {
+			Output = false;
+		}
 
-	
+		if (Output == true) {
+			
+			System.out.println("Success");
+
+		} else {
+
+			System.out.println("Failed to delete");
+		}
+
+	}
 
 }
+
+}
+

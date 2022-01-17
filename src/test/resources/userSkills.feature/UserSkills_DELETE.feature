@@ -1,11 +1,11 @@
 Feature: Delete user skills details
 Background:
-	Given User is on Endpoint: url/UserSkills with valid username and password
+	Given userSkills User is on Endpoint: url/UserSkills with valid username and password
 	
 Scenario Outline: Validate the delete method for UserSkills
-    When User sends request id ON DELETE Method from "<sheetName>" and <rowNumber>
-    Then User validates StatusCode and StatusMessage from "<sheetName>" sheet and <rowNumber> row
-    And check the Database to validate deletion
+    When userSkills User sends request id ON DELETE Method from "<sheetName>" and <rowNumber>
+    Then userSkills User validates StatusCode and StatusMessage from "<sheetName>" sheet and <rowNumber> row
+    And userSkills users check the Database to validate deletion
     
     Examples:
     | sheetName                  | rowNumber|

@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class LMSPojo {
-	private String str_SchemaFilePath="user_skill_schema1.json";
+	private String str_SchemaFilePath;
 	private String str_Schemajsonskill="skill_schema.json";
 	
 	private String excelPath;

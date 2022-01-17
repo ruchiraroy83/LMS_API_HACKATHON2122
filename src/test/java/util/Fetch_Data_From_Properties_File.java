@@ -27,19 +27,22 @@ public class Fetch_Data_From_Properties_File {
 				this.lmsPojo.setGET_AllSchemaFilePath(prop.getProperty("Get_all_Filepath"));
 				this.lmsPojo.setPOST_SchemaFilePath(prop.getProperty("POST_Filepath"));
 				System.out.println("Schema File Path is"+this.lmsPojo.getGET_SchemaFilePath());
+				break;
 			case "Users":
 				prop = readPropertiesFile("./src/test/resources/config/Users.properties");
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
+				break;
 			case "Skills":
 				prop = readPropertiesFile("./src/test/resources/config/Skills.properties");
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
+				break;
 			case "UserSkillsMapping":
 				prop = readPropertiesFile("./src/test/resources/config/UserSKillMapping.properties");
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
-				
+				break;
 			}
 
 		} catch (IOException e) {

@@ -358,36 +358,36 @@ public class SkillMaster {
 	}
 	}
 	}
-	@Then("check the Database at {String} and {int} to validate the deletion")
-	public void check_the_database_to_validate_the_deletion(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
-		ExcelReader reader = new ExcelReader();
-		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
-		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
-		System.out.println("Deleted id:" + jsonMap.get("Skill_Id"));
-		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
-				+ this.lmsPojo.getStr_skillid() + "'";
-
-		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
-				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
-		Boolean Output;
-		if (queryResult == null || queryResult.isEmpty()) {
-
-			Output = true;
-		} else {
-			Output = false;
-		}
-
-		if (Output == true) {
-
-			System.out.println("Success");
-
-		} else {
-
-			System.out.println("Failed to delete");
-		}
-
-	}
+//	@Then("check the Database at {String} and {int} to validate the deletion")
+//	public void check_the_database_to_validate_the_deletion(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
+//		ExcelReader reader = new ExcelReader();
+//		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
+//		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
+//		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
+//		System.out.println("Deleted id:" + jsonMap.get("Skill_Id"));
+//		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
+//				+ this.lmsPojo.getStr_skillid() + "'";
+//
+//		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+//				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+//		Boolean Output;
+//		if (queryResult == null || queryResult.isEmpty()) {
+//
+//			Output = true;
+//		} else {
+//			Output = false;
+//		}
+//
+//		if (Output == true) {
+//
+//			System.out.println("Success");
+//
+//		} else {
+//
+//			System.out.println("Failed to delete");
+//		}
+//
+//	}
 	
 
 	

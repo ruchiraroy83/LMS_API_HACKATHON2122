@@ -15,6 +15,8 @@ public class LMSPojo {
 	private String GET_SchemaFilePath;
 	private String GET_AllSchemaFilePath;
 	private String POST_SchemaFilePath;
+	private String User_Skill_SchemaFilePath;
+	private String Skill_User_SchemaFilePath;
 	private RequestSpecification request_URL;
 	private String str_baseURL;
 	private  String str_basePath;
@@ -220,6 +222,19 @@ public class LMSPojo {
 	public void setStr_userid(String str_userid) {
 		this.str_userid = str_userid;
 	}
+	public String getUser_Skill_SchemaFilePath() {
+		return User_Skill_SchemaFilePath;
+	}
+	public String getSkill_User_SchemaFilePath() {
+		return Skill_User_SchemaFilePath;
+	}
+	public void setUser_Skill_SchemaFilePath(String FilePath) {
+		User_Skill_SchemaFilePath = FilePath;		
+	}
+	public void setSkill_User_SchemaFilePath(String FilePath) {
+		Skill_User_SchemaFilePath = FilePath;		
+	}	
+	
 	
 	
 	

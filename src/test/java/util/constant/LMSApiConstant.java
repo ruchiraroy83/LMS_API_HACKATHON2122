@@ -14,6 +14,9 @@ public class LMSApiConstant {
 	public static final String CONST_USER_ID = "user_id";
 	public static final String CONST_USERSKILLS_API = "user_id";
 	public static final String CONST_USERS_API ="/Users";
+	public static final String CONST_USERSKILLSMAP_ENDPOINT = "/UserSkillsMap";
+	public static final String CONST_USERSKILLSMAP_USERQUERY_ENDPOINT = "/UserSkillsMap?user_id=";
+	public static final String CONST_USERSKILLSMAP_SKILLQUERY_ENDPOINT = "/UserSkillsMap?skill_id=";
 	
 	
 	

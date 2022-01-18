@@ -19,7 +19,6 @@ public class JSON_Schema_Validation {
 		_resp.assertThat().body(Matchers.notNullValue())
 				.body(JsonSchemaValidator.matchesJsonSchemaInClasspath(fileName));
 //			_resp.assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath(fileName));
-
 	}
 	
 }

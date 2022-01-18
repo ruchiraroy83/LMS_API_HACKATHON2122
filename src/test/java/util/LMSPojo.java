@@ -35,6 +35,8 @@ public class LMSPojo {
 	private String status_message;
 	private String numericColumns;
 	private String str_SchemaFileallusers;
+	private String str_userid;
+	
 	public String getStr_SchemaFileSkills() {
 		return str_SchemaFileSkills;
 	}
@@ -53,6 +55,13 @@ public class LMSPojo {
 	public void setStr_skillid(String str_skillid) {
 		this.str_skillid = str_skillid;
 	}
+	public String getStr_userid() {
+		return str_userid;
+	}
+	public void setStr_userid(String str_userid) {
+		this.str_userid = str_userid;
+	}
+
 	public String getStr_skillname() {
 		return str_skillname;
 	}
@@ -190,14 +199,14 @@ public class LMSPojo {
 	public String getGET_SchemaFilePath() {
 		return GET_SchemaFilePath;
 	}
-	public void setGET_SchemaFilePath(String gET_SchemaFilePath) {
-		GET_SchemaFilePath = gET_SchemaFilePath;
+	public void setGET_SchemaFilePath(String get_SchemaFilePath) {
+		GET_SchemaFilePath = get_SchemaFilePath;
 	}
 	public String getGET_AllSchemaFilePath() {
 		return GET_AllSchemaFilePath;
 	}
-	public void setGET_AllSchemaFilePath(String gET_AllSchemaFilePath) {
-		GET_AllSchemaFilePath = gET_AllSchemaFilePath;
+	public void setGET_AllSchemaFilePath(String get_AllSchemaFilePath) {
+		GET_AllSchemaFilePath = get_AllSchemaFilePath;
 	}
 	public String getPOST_SchemaFilePath() {
 		return POST_SchemaFilePath;

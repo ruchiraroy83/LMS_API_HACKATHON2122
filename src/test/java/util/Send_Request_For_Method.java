@@ -1,6 +1,7 @@
 package util;
 
 import static util.constant.LMSApiConstant.CONST_SCENARIO;
+import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
@@ -20,11 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.internal.path.json.JSONAssertion;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 public class Send_Request_For_Method {
 
 	private static final String CONST_USER_SKILL_ID = "user_skill_id";

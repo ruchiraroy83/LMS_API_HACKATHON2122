@@ -7,6 +7,7 @@ public class LMSPojo {
 	private String str_SchemaFilePath;
 
 	private String str_GETSkillsSchema;
+	private String str_GETidSkillsSchema;
 	private String str_POSTSkillsSchema;
 	private String str_userid;
 	
@@ -36,6 +37,12 @@ public class LMSPojo {
 	private String status_message;
 	private String numericColumns;
 	private String str_SchemaFileallusers;
+	public String getStr_GETidSkillsSchema() {
+		return str_GETidSkillsSchema;
+	}
+	public void setStr_GETidSkillsSchema(String str_GETidSkillsSchema) {
+		this.str_GETidSkillsSchema = str_GETidSkillsSchema;
+	}
 	public String getStr_SchemaFileSkills() {
 		return str_SchemaFileSkills;
 	}

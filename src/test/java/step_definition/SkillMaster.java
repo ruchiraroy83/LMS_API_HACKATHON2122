@@ -5,9 +5,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_SKILL_NAME;
-
+import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,7 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.hamcrest.collection.IsMapContaining;
 
@@ -30,9 +35,11 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import util.ExcelReader;
+import util.ExcelWriter;
 import util.Fetch_Data_From_Properties_File;
 import util.Fetch_Data_From_SQL;
 import util.JSON_Schema_Validation;
@@ -94,6 +101,42 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 		
 	}
+	@When("skills User sends POST request body in text format skills from {string} and {int}")
+	public void skills_User_sends_POST_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
+		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
+        System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
+       
+        String numericColumns = this.lmsPojo.getNumericColumns();
+        ExcelReader reader = new ExcelReader();
+        System.out.println("Excel path:" + this.lmsPojo.getExcelPath());
+        System.out.println("Sheetname:"+ SheetName );
+		List<Map<String, String>> excelRows = reader.getData("./" + this.lmsPojo.getExcelPath(), SheetName);
+		Map<String, Object> finalMap = new HashMap<>();
+        Map<String, String> row = excelRows.get(RowNumber);
+		row.remove(CONST_SCENARIO);
+		row.remove(CONST_STATUS_CODE);
+		row.remove(CONST_STATUS_MESSAGE);
+		row.remove(CONST_SKILL_ID);
+		for (Map.Entry<String, String> entry : row.entrySet()) {
+			Object value = entry.getValue();
+		    if (numericColumns.contains(entry.getKey())) {
+			value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
+					? Integer.parseInt(entry.getValue())
+					: entry.getValue();
+		  }
+		  finalMap.put(entry.getKey(), value);
+	   }
+	  ObjectMapper mapper = new ObjectMapper();
+	  String requestString = mapper.writeValueAsString(finalMap);
+	  Response response = this.lmsPojo.getRequest_URL().header(HttpHeaders.CONTENT_TYPE, ContentType.TEXT).body(requestString).post(this.lmsPojo.getStr_FinalURI());
+        
+
+		if (response != null) {
+			System.out.println("Response :\n" + response.asString());
+			}
+		this.lmsPojo.setRes_response(response);
+	}
 	
 	@When("User sends PUT request body in skills from {string} and {int} with valid JSON Schema")
 	public void user_sends_put_request_body_in_skills_from_and_with_valid_json_schema(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
@@ -106,6 +149,42 @@ public class SkillMaster {
         System.out.println(testData.get(RowNumber).get(CONST_SKILL_NAME));
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
+		this.lmsPojo.setRes_response(response);
+	}
+	@When("skills User sends PUT request body in text format skills from {string} and {int}")
+	public void skills_User_sends_PUT_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
+		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
+        System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
+       
+        String numericColumns = this.lmsPojo.getNumericColumns();
+        ExcelReader reader = new ExcelReader();
+        System.out.println("Excel path:" + this.lmsPojo.getExcelPath());
+        System.out.println("Sheetname:"+ SheetName );
+		List<Map<String, String>> excelRows = reader.getData("./" + this.lmsPojo.getExcelPath(), SheetName);
+		Map<String, Object> finalMap = new HashMap<>();
+        Map<String, String> row = excelRows.get(RowNumber);
+		row.remove(CONST_SCENARIO);
+		row.remove(CONST_STATUS_CODE);
+		row.remove(CONST_STATUS_MESSAGE);
+		row.remove(CONST_SKILL_ID);
+		for (Map.Entry<String, String> entry : row.entrySet()) {
+			Object value = entry.getValue();
+		    if (numericColumns.contains(entry.getKey())) {
+			value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
+					? Integer.parseInt(entry.getValue())
+					: entry.getValue();
+		  }
+		  finalMap.put(entry.getKey(), value);
+	   }
+	  ObjectMapper mapper = new ObjectMapper();
+	  String requestString = mapper.writeValueAsString(finalMap);
+	  Response response = this.lmsPojo.getRequest_URL().header(HttpHeaders.CONTENT_TYPE, ContentType.TEXT).body(requestString).post(this.lmsPojo.getStr_FinalURI());
+        
+
+		if (response != null) {
+			System.out.println("Response :\n" + response.asString());
+			}
 		this.lmsPojo.setRes_response(response);
 	}
 
@@ -129,8 +208,9 @@ public class SkillMaster {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
 
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-
+       
 		Map<String, String> row = testData.get(RowNumber);
+		
 		for (Map.Entry<String, String> entry : row.entrySet()) {
 			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
 				if (mapResponse.getKey() == entry.getKey()) {
@@ -160,13 +240,15 @@ public class SkillMaster {
 	public void json_schema_is_valid_for_get_in_skills(String Method) {
 		switch (Method) {
 		case "GET":
-			this.lmsPojo.setStr_SchemaFileSkills(this.lmsPojo.getStr_GETSkillsSchema());
 			
+			this.lmsPojo.setStr_SchemaFileSkills(this.lmsPojo.getStr_GETidSkillsSchema());
+			break;
 		case "POST":
 			this.lmsPojo.setStr_SchemaFileSkills(this.lmsPojo.getStr_POSTSkillsSchema());
-			
+			break;
 		case "PUT":
 			this.lmsPojo.setStr_SchemaFileSkills(this.lmsPojo.getStr_POSTSkillsSchema());
+			break;
 		}
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
@@ -208,29 +290,6 @@ public class SkillMaster {
 	}
 	
 
-	@Then("User should receive a particular skill from {string} and {int}")
-	public void user_should_receive_a_particular_skill_from_and(String SheetName, int RowNumber) throws InvalidFormatException, IOException {
-		
-		ExcelReader reader = new ExcelReader();
-		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
-
-		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-
-		Map<String, String> row = testData.get(RowNumber);
-		for (Map.Entry<String, String> entry : row.entrySet()) {
-			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
-				if (mapResponse.getKey() == entry.getKey()) {
-					assertEquals(mapResponse.getKey(), entry.getKey());
-				}
-
-			}
-		}
-
-	    
-	}
-
-	
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, Object> extractResponse(Response response) throws JsonMappingException, JsonProcessingException {
 		ResponseBody responseBody = response.getBody();
@@ -238,49 +297,32 @@ public class SkillMaster {
 		Map<String, Object> jsonMap = null;
 		ObjectMapper mapper = new ObjectMapper();
 		jsonMap = mapper.readValue(responseBody.asString(), Map.class);
-		
-		
 		return jsonMap;
 	}
 
 
-	
-	
 	@Then("check the Database for skills")
 	public void check_the_database_for_all_skills() throws JsonMappingException, JsonProcessingException {
 		    String getStr_Query="select skill_id,skill_name from tbl_lms_skill_master";
 			Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 					this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), getStr_Query);
-            System.out.println(queryResult);
-            System.out.println("Res_response:" + this.lmsPojo.getRes_response());
-            ResponseBody responseBody = this.lmsPojo.getRes_response().getBody();
-    		System.out.println("RSBody:" + responseBody.asString());
-    		assertNotNull(responseBody);
-    		//Object jsonMap = null;
-    		ObjectMapper mapper = new ObjectMapper();
-    		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    		@SuppressWarnings("rawtypes")
-			List<HashMap> jsonMap = mapper.readValue(responseBody.asString(), List.class);
-    		//List<MyClass> myObjects = mapper.readValue(mapData , new TypeReference<List<MyClass>>(){});
-    		//jsonMap = mapper.readValue(responseBody.asString(), new TypeReference<Object>() {});
-    		//mapper.readValue(file, new TypeReference<Object>() {});
-            
-			if (queryResult == null || queryResult.isEmpty()) {
+			Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 
+			if (CollectionUtils.sizeIsEmpty(queryResult)) {
 				System.out.println("No records found");
 
 			} else {
-				System.out.println("JSONMAP" + jsonMap);
-				for (Entry<String, String> jsonMapFinal : ((Map<String, String>) jsonMap).entrySet()) {
+				for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
 					for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
 						if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
 							Object obj = jsonMapFinal.getValue();
-							System.out.println(obj);
-							if(obj!=null && obj instanceof Integer) {
-								assertEquals(jsonMapFinal.getValue(), queryResultFinal.getValue());
-								
-							}else {
-								assertEquals((String)jsonMapFinal.getValue(), queryResultFinal.getValue());
+
+							if (obj != null && obj instanceof Integer) {
+								assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
+										queryResultFinal.getValue());
+
+							} else {
+								assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
 							}
 						}
 					}
@@ -338,16 +380,9 @@ public class SkillMaster {
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
 		Boolean Output;
-		for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
-			for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
-				if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
-					Object obj = jsonMapFinal.getValue();
-                    assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
-					
-				}
-			}
-
-		}
+		
+			
+		
 		if (queryResult == null || queryResult.isEmpty()) {
 			Output = true;
 			

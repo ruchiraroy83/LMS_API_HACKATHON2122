@@ -41,6 +41,7 @@ public class Fetch_Data_From_Properties_File {
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
 				this.lmsPojo.setStr_GETSkillsSchema(prop.getProperty("Skills_GET_Filepath"));
+				this.lmsPojo.setStr_GETidSkillsSchema(prop.getProperty("Skills_GET_id_Filepath"));
 				this.lmsPojo.setStr_POSTSkillsSchema(prop.getProperty("Skills_POST_Filepath"));
 				break;
 			case "UserSkillsMapping":

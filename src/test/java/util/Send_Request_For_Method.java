@@ -24,7 +24,7 @@ import io.restassured.http.ContentType;
 import io.restassured.internal.path.json.JSONAssertion;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
+import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 public class Send_Request_For_Method {
 
 	private static final String CONST_USER_SKILL_ID = "user_skill_id";
@@ -61,9 +61,22 @@ public class Send_Request_For_Method {
 			row.remove(CONST_STATUS_CODE);
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
+			row.remove(CONST_SKILL_ID);
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
-				
+				if (row.containsKey("Skill_name")) {
+					if (value.equals("true") || value.equals("false") ) {
+						boolean b = Boolean.valueOf(value.toString());
+						value=b;
+						
+						
+					}
+
+	            if (StringUtils.isNumeric(entry.getValue())) {
+					       value =  Integer.parseInt(entry.getValue());
+						    
+					}
+				}
 
 				if (numericColumns.contains(entry.getKey())) {
 					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
@@ -101,10 +114,26 @@ public class Send_Request_For_Method {
 			Map<String, Object> finalMap_put = new HashMap<>();
 			Map<String, String> row_put = excelRows_put.get(rowNumber);
 			row_put.remove(CONST_USERSKILL_ID);
-
+			row_put.remove(CONST_SKILL_ID);
+            row_put.remove(CONST_SCENARIO);
+			row_put.remove(CONST_STATUS_CODE);
+			row_put.remove(CONST_STATUS_MESSAGE);
+            
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
-
+				if (row_put.containsKey("Skill_name")) {
+					if (value.equals("true") || value.equals("false") ) {
+						boolean b = Boolean.valueOf(value.toString());
+						value=b;
+						
+						
+					}
+					
+					if (StringUtils.isNumeric(entry.getValue())) {
+					       value =  Integer.parseInt(entry.getValue());
+						    
+					}
+				}
 				if (numericColumns.contains(entry.getKey())) {
 					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
 							? Integer.parseInt(entry.getValue())

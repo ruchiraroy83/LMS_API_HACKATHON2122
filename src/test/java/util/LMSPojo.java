@@ -5,7 +5,9 @@ import io.restassured.specification.RequestSpecification;
 
 public class LMSPojo {
 	private String str_SchemaFilePath;
-	private String str_Schemajsonskill="skill_schema.json";
+
+	private String str_GETSkillsSchema;
+	private String str_POSTSkillsSchema;
 	
 	private String excelPath;
 	private String GET_SchemaFilePath;
@@ -36,6 +38,12 @@ public class LMSPojo {
 	public String getStr_SchemaFileSkills() {
 		return str_SchemaFileSkills;
 	}
+	public String getStr_POSTSkillsSchema() {
+		return str_POSTSkillsSchema;
+	}
+	public void setStr_POSTSkillsSchema(String str_POSTSkillsSchema) {
+		this.str_POSTSkillsSchema = str_POSTSkillsSchema;
+	}
 	public void setStr_SchemaFileSkills(String str_SchemaFileSkills) {
 		this.str_SchemaFileSkills = str_SchemaFileSkills;
 	}
@@ -57,12 +65,8 @@ public class LMSPojo {
 	public void setStr_SchemaFilePath(String str_SchemaFilePath) {
 		this.str_SchemaFilePath = str_SchemaFilePath;
 	}
-	public String getStr_Schemajsonskill() {
-		return str_Schemajsonskill;
-	}
-	public void setStr_Schemajsonskill(String str_Schemajsonskill) {
-		this.str_Schemajsonskill = str_Schemajsonskill;
-	}
+	
+	
 	public String getStr_SchemaFileallusers() {
 		return getStr_SchemaFileallusers();
 	}
@@ -71,6 +75,12 @@ public class LMSPojo {
 	}
 	public String getExcelPath() {
 		return excelPath;
+	}
+	public String getStr_GETSkillsSchema() {
+		return str_GETSkillsSchema;
+	}
+	public void setStr_GETSkillsSchema(String str_GETSkillsSchema) {
+		this.str_GETSkillsSchema = str_GETSkillsSchema;
 	}
 	public void setExcelPath(String excelPath) {
 		this.excelPath = excelPath;

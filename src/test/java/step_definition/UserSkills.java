@@ -32,6 +32,10 @@ import util.LMSPojo;
 import util.Send_Request_For_Method;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
+import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;;
 
 public class UserSkills {
 	private LMSPojo lmsPojo;
@@ -48,6 +52,16 @@ public class UserSkills {
 		this.lmsPojo.setRequest_URL(
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
+	}
+	@Given("userSkill User with  username & password from {string} and {int} is on Endpoint: url\\/UserSkills")
+	public void user_skill_user_with_username_password_from_and_is_on_endpoint_url_user_skills(String sheetName, Integer rowNumber) throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		this.lmsPojo.setRequest_URL(
+				Send_Request_For_Method.request_URL(testData.get(rowNumber).get("UserName"), testData.get(rowNumber).get("Password")));
+		System.out.println("usr nm :" + testData.get(rowNumber).get("UserName"));
+		System.out.println("pwd :" + testData.get(rowNumber).get("Password"));
+	    
 	}
 
 //
@@ -73,7 +87,7 @@ public class UserSkills {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
-		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("UserSkills_ID"));
+		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
@@ -104,7 +118,7 @@ public class UserSkills {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
-		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get("UserSkills_ID"));
+		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -121,7 +135,7 @@ public class UserSkills {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
-		this.lmsPojo.setStr_userskillsid(DeltestData.get(rowNumber).get("user_skill_id"));
+		this.lmsPojo.setStr_userskillsid(DeltestData.get(rowNumber).get(CONST_USER_SKILL_ID));
 		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -130,7 +144,7 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 	}
 
-	@When("userSkills JSON schema is valid")
+	@Then("userSkills JSON schema is valid")
 	public void userSkills_json_schema_is_valid() {
 		
 		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_AllSchemaFilePath());
@@ -172,13 +186,13 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		Map<String, String> scenario = testData.get(rowNumber);
-		String statusCodeString = scenario.get("StatusCode");
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
-		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("StatusMessage"));
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
 
 		Response response = this.lmsPojo.getRes_response();
 
@@ -189,6 +203,28 @@ public class UserSkills {
 		assertNotNull(jsonMap);
 		if (this.lmsPojo.getStatus_message() != "") {
 			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
+		}
+
+	}
+	
+	@Then("userSkills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
+	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		Map<String, String> scenario = testData.get(rowNumber);
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
+
+		if (!StringUtils.isEmpty(statusCodeString)) {
+			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
+		}
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
+		Response response = this.lmsPojo.getRes_response();
+		assertNotNull(response);
+		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
+
+		if (this.lmsPojo.getStatus_message() != "") {
+			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
 		}
 
 	}
@@ -235,7 +271,7 @@ public class UserSkills {
 	public void check_the_database() {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		String queryString = "select user_skill_id,user_id,skill_Id,months_of_exp from tbl_lms_userskill_map where user_skill_id='"
-				+ jsonMap.get("user_skill_id") + "'";
+				+ jsonMap.get(CONST_USER_SKILL_ID) + "'";
 
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
@@ -301,7 +337,7 @@ public class UserSkills {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
-				+ DeltestData.get(rowNumber).get("user_skill_id") + "'";
+				+ DeltestData.get(rowNumber).get(CONST_USER_SKILL_ID) + "'";
 
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);

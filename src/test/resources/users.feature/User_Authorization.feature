@@ -8,8 +8,8 @@ Scenario Outline: Check the Authorization with with different set of username & 
     
     Examples:
     | sheetName    | rowNumber|
-    | Authorization| 0        |
-    | Authorization| 1        |
-    | Authorization| 2        |
-    | Authorization| 3        |
+    | Users_Authorization| 0        |
+    | Users_Authorization| 1        |
+    | Users_Authorization| 2        |
+    | Users_Authorization| 3        |
    

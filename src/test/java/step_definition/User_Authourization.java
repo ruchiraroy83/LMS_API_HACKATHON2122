@@ -24,11 +24,11 @@ import util.Fetch_Data_From_Properties_File;
 import util.LMSPojo;
 import util.Send_Request_For_Method;
 
-public class Authourization {
+public class User_Authourization {
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
-	public Authourization() {
+	public User_Authourization() {
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("Users");
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method("Users");

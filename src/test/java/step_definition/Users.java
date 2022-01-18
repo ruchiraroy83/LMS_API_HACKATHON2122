@@ -4,6 +4,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USER_ID;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,14 +47,12 @@ public class Users {
 		this.lmsPojo.setRequest_URL(Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
-	@Given("User API User is on Endpoint: url\\/Users username & password from {string} and {int}")
-	public void user_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
+	@Given("UsersAPI User is on Endpoint: url\\/Users username & password from {string} and {int}")
+	public void users_API_user_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		this.lmsPojo.setRequest_URL(
 				Send_Request_For_Method.request_URL(testData.get(rowNumber).get("UserName"), testData.get(rowNumber).get("Password")));
-		System.out.println("usr nm :" + testData.get(rowNumber).get("UserName"));
-		System.out.println("pwd :" + testData.get(rowNumber).get("Password"));
 	    
 	}
 
@@ -63,7 +64,7 @@ public class Users {
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 	}
 	
-	@When("usersAPI User sends GET request on userid from {string} and {int}")
+	@When("UsersAPI User sends GET request on userid from {string} and {int}")
 	public void UsersAPI_user_sends_get_request_on_userid_from_and(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
 		
@@ -77,6 +78,16 @@ public class Users {
 		
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
+		this.lmsPojo.setRes_response(response);
+	}
+	
+	@When("UsersAPI User  sends POST request body from {string} and {int} with valid JSON Schema")
+	public void users_api_sends_post_request_body_from_and_with_valid_json_schema(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
+		this.lmsPojo.setStr_basePath("/Users");
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
+        System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
 
@@ -98,7 +109,7 @@ public class Users {
 //		}
 	}
 	
-	@Then("usersAPI JSON schema is valid for {string}")
+	@Then("UsersAPI JSON schema is valid for {string}")
 	public void UsersAPI_json_schema_is_valid_for(String MethodName) {
 		System.out.println(MethodName);
 		switch (MethodName) {
@@ -120,6 +131,23 @@ public class Users {
 		}
 
 	}
+	@Then("UsersAPI User should receive the user details in JSON body from {string} and {int}")
+	public void users_api_should_receive_the_user_details_in_json_body_from_and(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
+
+		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+
+		Map<String, String> row = testData.get(RowNumber);
+		for (Map.Entry<String, String> entry : row.entrySet()) {
+			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
+				if (mapResponse.getKey() == entry.getKey()) {
+					assertEquals(mapResponse.getKey(), entry.getKey());
+				}
+
+			}
+		}
+	}
 
 	@Then("UsersAPI User validates StatusCode")
 	public void UsersAPI_user_validates_status_code() throws InvalidFormatException, IOException {
@@ -127,49 +155,6 @@ public class Users {
 		System.out.println("Status Code actual : " + this.lmsPojo.getRes_response().getStatusCode());
 	}
 	
-	@Then("userAPI User Checks for StatusCode and StatusMessage from {string} sheet and {int} row")
-	public void user_api_user_validates_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber) throws Throwable, IOException {
-		ExcelReader reader = new ExcelReader();
-		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-
-		Map<String, String> scenario = testData.get(rowNumber);
-		String statusCodeString = scenario.get("StatusCode");
-
-		if (!StringUtils.isEmpty(statusCodeString)) {
-			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
-		}
-		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("StatusMessage"));
-		Response response = this.lmsPojo.getRes_response();
-		assertNotNull(response);
-		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
-
-		if (this.lmsPojo.getStatus_message() != "") {
-			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
-		}
-
-	}
-	
-//	@Then("userSkills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
-//	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
-//		ExcelReader reader = new ExcelReader();
-//		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-//
-//		Map<String, String> scenario = testData.get(rowNumber);
-//		String statusCodeString = scenario.get(CONST_STATUS_CODE);
-//
-//		if (!StringUtils.isEmpty(statusCodeString)) {
-//			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
-//		}
-//		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
-//		Response response = this.lmsPojo.getRes_response();
-//		assertNotNull(response);
-//		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
-//
-//		if (this.lmsPojo.getStatus_message() != "") {
-//			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
-//		}
-//
-//	}
 	
 	@Then("UsersAPI User validates StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void UsersAPI_user_receives_status_code_with(String sheetName, int rowNumber) throws InvalidFormatException, IOException {
@@ -177,13 +162,13 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		Map<String, String> scenario = testData.get(rowNumber);
-		String statusCodeString = scenario.get("StatusCode");
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
-		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("StatusMessage"));
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
 		Response response = this.lmsPojo.getRes_response();
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
@@ -265,26 +250,22 @@ public class Users {
 		}
 	}
 
-	
-//@When("User sends POST request body from {string} and {int} with valid JSON Schema for user api")
-//public void user_sends_POST_request_body_from(String sheetName, int rowNumber)
-//		throws IOException, InvalidFormatException, InterruptedException {
-//
-//	this.lmsPojo.setStr_basePath("/Users");
-//
-//	this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-//	System.out.println(this.lmsPojo.getStr_FinalURI());
-//
-//	System.out.println("excel path is :" + this.lmsPojo.getExcelPath() + ", SheetName is:" + sheetName
-//			+ ",Row number is:" + rowNumber);
-//	Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
-//			this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
-//	this.lmsPojo.setRes_response(response);
-//
-//}
+	@When("UsersAPI user sends request id ON DELETE Method from {string} and {int}")
+	public void users_api_sends_request_id_on_delete_method_from_and(String sheetName, int rowNumber) throws InvalidFormatException, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData_del = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		this.lmsPojo.setStr_userid(testData_del.get(rowNumber).get(CONST_USER_ID));
+		this.lmsPojo.setStr_basePath("/Users/" + this.lmsPojo.getStr_userid());
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
+
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
+		this.lmsPojo.setRes_response(response);
+	}
 
 
-	@Then("User should receive a list of user in JSON body with the fields like user_id,name,phone_number,location,time_zone,linkedin_url from {string} and {int}")
+	@Then("UsersAPI User should receive a list of user in JSON body with the fields like user_id,name,phone_number,location,time_zone,linkedin_url from {string} and {int}")
 	public void user_should_receive_a_list_of_users_in_json_body_with_the_fields_like_user_id_name_phone_number_location_time_zone_linkedin_url_from_and(
 			String sheetName, int rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -303,6 +284,50 @@ public class Users {
 			}
 		}
 	}
+	@Then("UsersAPI User check the Database to validate deletion from {string} sheet and {int} row")
+	public void users_api_check_the_database_to_validate_deletion_from_sheet_and_row(String sheetName, Integer rowNumber) throws Throwable, IOException {
+		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		if (jsonMap.get("user_id") != null) {
+		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_user WHERE user_id='"
+				+ DeltestData.get(rowNumber).get(CONST_USER_ID) + "'";
+
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+		Boolean Output;
+		for (Map.Entry<String, Object> jsonMapFinal : jsonMap.entrySet()) {
+			for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
+				if (jsonMapFinal.getKey().equalsIgnoreCase(queryResultFinal.getKey())) {
+					Object obj = jsonMapFinal.getValue();
+                    assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
+					
+				}
+			}
+
+		}
+		if (queryResult == null || queryResult.isEmpty()) {
+			Output = true;
+			
+			
+		} else {
+			Output = false;
+		}
+
+		if (Output == true) {
+			
+			System.out.println("Success");
+
+		} else {
+
+			System.out.println("Failed to delete");
+		}
+
+	}
+
+
+	}
+
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 private Map<String, Object> extractResponse_user(Response response) {
@@ -318,6 +343,7 @@ private Map<String, Object> extractResponse_user(Response response) {
 	System.out.println("XXXXXXX" + jsonMap.toString());
 	return jsonMap;
 }
+
 
 
 }

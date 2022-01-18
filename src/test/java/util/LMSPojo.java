@@ -30,7 +30,8 @@ public class LMSPojo {
 	private String str_Query;
 	private String str_userskillsid;
     private String str_SchemaFileSkills;
-	
+    private String Str_userid;
+
 	private String str_skillid;
 	private String str_skillname;
 	private int status_code;

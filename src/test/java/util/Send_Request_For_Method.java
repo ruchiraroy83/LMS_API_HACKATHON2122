@@ -4,6 +4,7 @@ import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USER_ID;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class Send_Request_For_Method {
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
 			row.remove(CONST_SKILL_ID);
+			row.remove(CONST_USER_ID);
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
 				if (row.containsKey("Skill_name")) {

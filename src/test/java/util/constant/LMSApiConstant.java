@@ -11,6 +11,7 @@ public class LMSApiConstant {
 	public static final Integer CONST_POST_SUCCESS_STATUS_CODE = 201;
 	public static final String CONST_SKILL_ID = "Skill_Id";
 	public static final String CONST_SKILL_NAME = "Skill_name";
+	public static final String CONST_USER_ID = "user_id";
 	
 	
 	

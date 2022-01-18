@@ -33,7 +33,7 @@ public class User_Authourization {
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method("Users");
 	}
-	@Given("User is on Endpoint: url\\/Users username & password from {string} and {int}")
+	@Given("User API User is on Endpoint: url\\/Users username & password from {string} and {int}")
 	public void user_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);

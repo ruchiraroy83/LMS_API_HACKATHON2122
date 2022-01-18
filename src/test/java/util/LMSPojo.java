@@ -8,6 +8,7 @@ public class LMSPojo {
 
 	private String str_GETSkillsSchema;
 	private String str_POSTSkillsSchema;
+	private String str_userid;
 	
 	private String excelPath;
 	private String GET_SchemaFilePath;
@@ -190,8 +191,8 @@ public class LMSPojo {
 	public String getGET_SchemaFilePath() {
 		return GET_SchemaFilePath;
 	}
-	public void setGET_SchemaFilePath(String gET_SchemaFilePath) {
-		GET_SchemaFilePath = gET_SchemaFilePath;
+	public void setGET_SchemaFilePath(String get_SchemaFilePath) {
+		GET_SchemaFilePath = get_SchemaFilePath;
 	}
 	public String getGET_AllSchemaFilePath() {
 		return GET_AllSchemaFilePath;
@@ -205,7 +206,12 @@ public class LMSPojo {
 	public void setPOST_SchemaFilePath(String pOST_SchemaFilePath) {
 		POST_SchemaFilePath = pOST_SchemaFilePath;
 	}
-
+	public String getStr_userid() {
+		return str_userid;
+	}
+	public void setStr_userid(String str_userid) {
+		this.str_userid = str_userid;
+	}
 	
 	
 	

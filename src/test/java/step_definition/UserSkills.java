@@ -35,7 +35,8 @@ import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
-import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USERSKILLS_API;
 
 public class UserSkills {
 	private LMSPojo lmsPojo;
@@ -74,7 +75,7 @@ public class UserSkills {
 
 	@When("userSkills User sends GET request")
 	public void userSkills_user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/UserSkills");
+		this.lmsPojo.setStr_basePath(CONST_USERSKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
@@ -88,7 +89,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/UserSkills/" + this.lmsPojo.getStr_userskillsid());
+		this.lmsPojo.setStr_basePath(CONST_USERSKILLS_API+"/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 

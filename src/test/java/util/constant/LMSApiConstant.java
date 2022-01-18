@@ -12,6 +12,8 @@ public class LMSApiConstant {
 	public static final String CONST_SKILL_ID = "Skill_Id";
 	public static final String CONST_SKILL_NAME = "Skill_name";
 	public static final String CONST_USER_ID = "user_id";
+	public static final String CONST_USERSKILLS_API = "user_id";
+	public static final String CONST_USERS_API ="/Users";
 	
 	
 	

@@ -7,6 +7,7 @@ import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USER_ID;
+import static util.constant.LMSApiConstant.CONST_USERS_API;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Users {
 
 	@When("UsersAPI User sends GET request")
 	public void UsersAPI_user_sends_request_users_api() throws InterruptedException, InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/Users");
+		this.lmsPojo.setStr_basePath(CONST_USERS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
@@ -72,7 +73,7 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userid(testData.get(rowNumber).get("Users_ID"));
-		this.lmsPojo.setStr_basePath("/Users/" + this.lmsPojo.getStr_userid());
+		this.lmsPojo.setStr_basePath(CONST_USERS_API+"/" + this.lmsPojo.getStr_userid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		

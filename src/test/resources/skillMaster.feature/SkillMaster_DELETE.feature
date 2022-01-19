@@ -3,7 +3,7 @@ Background:
 	Given Skills User is on Endpoint: url/Skills with valid username and password
 
 Scenario Outline: Validate DELETE Skills when user logged with UserName with Password   
-    When skills User sends DELETE skill id ON DELETE Method from "<SheetName>" and <RowNumber>
+    When skills User sends DELETE skill id ON DELETE Method from "<IDsheetName>" and <RowNumber>
     Then skills User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And  skills User checks the Database to validate deletion from "<IDsheetName>" sheet and <RowNumber> row
     

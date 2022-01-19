@@ -10,68 +10,31 @@
 			<version>3.3.0</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-api</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-server -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-server</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-support</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-chrome-driver</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-firefox-driver -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-firefox-driver</artifactId>
-			<version>3.141.59</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.14.3</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
 		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>4.3.1</version>
+		    <groupId>io.qameta.allure</groupId>
+		    <artifactId>allure-testng</artifactId>
+		    <version>2.17.2</version>
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/junit/junit-dep -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
-			<version>4.10</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -98,30 +61,26 @@
 			<artifactId>cucumber-java</artifactId>
 			<version>6.10.3</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-core -->
+		<dependency>
+		    <groupId>io.cucumber</groupId>
+		    <artifactId>cucumber-core</artifactId>
+		    <version>6.10.3</version>
+		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-
-		<dependency>
+        <dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.2</version>
 		</dependency>
-
-
-		<dependency>
+        <dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>4.1.2</version>
@@ -131,11 +90,19 @@
 			<artifactId>json-schema-validator</artifactId>
 			<version>4.3.3</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.13.1</version>
+		</dependency>
+        <dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.3.1</version>
 		</dependency>
+
+
+
 	</dependencies>
 </project>

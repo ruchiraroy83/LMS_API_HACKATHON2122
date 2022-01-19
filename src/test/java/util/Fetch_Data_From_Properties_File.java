@@ -34,19 +34,21 @@ public class Fetch_Data_From_Properties_File {
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
 				this.lmsPojo.setGET_SchemaFilePath(prop.getProperty("Get_Filepath"));
 				this.lmsPojo.setGET_AllSchemaFilePath(prop.getProperty("Get_all_Filepath"));
-				this.lmsPojo.setPOST_SchemaFilePath(prop.getProperty("POST_Resp_Filepath"));
+				this.lmsPojo.setPOST_SchemaFilePath(prop.getProperty("POST_Filepath"));
 				break;
 			case "Skills":
 				prop = readPropertiesFile("./src/test/resources/config/Skills.properties");
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
 				this.lmsPojo.setStr_GETSkillsSchema(prop.getProperty("Skills_GET_Filepath"));
-				this.lmsPojo.setStr_POSTSkillsSchema("Skills_POST_Filepath");
+				this.lmsPojo.setStr_GETidSkillsSchema(prop.getProperty("Skills_GET_id_Filepath"));
+				this.lmsPojo.setStr_POSTSkillsSchema(prop.getProperty("Skills_POST_Filepath"));
 				break;
-			case "UserSkillsMapping":
-				prop = readPropertiesFile("./src/test/resources/config/UserSKillMapping.properties");
+			case "UserSkillsMap":
+				prop = readPropertiesFile("./src/test/resources/config/UserSkillMap.properties");
 				this.lmsPojo.setExcelPath(prop.getProperty("ExcelPath"));
-				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
+				this.lmsPojo.setUser_Skill_SchemaFilePath(prop.getProperty("User_skill_GET_Filepath"));
+				this.lmsPojo.setSkill_User_SchemaFilePath(prop.getProperty("Skill_user_GET_Filepath"));
 				break;
 			}
 

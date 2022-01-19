@@ -4,7 +4,9 @@ import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
-import static util.constant.LMSApiConstant.CONST_USERSKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USER_ID;
+import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USERSKILLS_API;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,11 +28,11 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 public class Send_Request_For_Method {
-
-	private static final String CONST_USER_SKILL_ID = "user_skill_id";
+	public static String NewAPIEndpoint;
 	private LMSPojo lmsPojo;
 
 	public Send_Request_For_Method(String API_Endpoint) {
+		NewAPIEndpoint = API_Endpoint;
 
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(API_Endpoint);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
@@ -62,6 +64,10 @@ public class Send_Request_For_Method {
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
 			row.remove(CONST_SKILL_ID);
+			if (NewAPIEndpoint!=CONST_USERSKILLS_API) {
+				row.remove(CONST_USER_ID);				
+			}
+			
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
 				if (row.containsKey("Skill_name")) {
@@ -88,7 +94,7 @@ public class Send_Request_For_Method {
 			ObjectMapper mapper = new ObjectMapper();
 			String requestString = mapper.writeValueAsString(finalMap);
 			
-
+			System.out.println("Request is :" +requestString);
 			response = httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON).body(requestString).post(strURL);
 
 			if (response != null) {
@@ -113,7 +119,7 @@ public class Send_Request_For_Method {
 			List<Map<String, String>> excelRows_put = reader_put.getData("./" + ExcelPath, SheetName);
 			Map<String, Object> finalMap_put = new HashMap<>();
 			Map<String, String> row_put = excelRows_put.get(rowNumber);
-			row_put.remove(CONST_USERSKILL_ID);
+			row_put.remove(CONST_USER_SKILL_ID);
 			row_put.remove(CONST_SKILL_ID);
             row_put.remove(CONST_SCENARIO);
 			row_put.remove(CONST_STATUS_CODE);

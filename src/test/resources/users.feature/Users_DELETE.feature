@@ -1,18 +1,18 @@
-Feature: Delete user skills details
+Feature: Delete Users details
 Background:
-	Given User is on Endpoint: url/Users with valid username and password
+	Given UsersAPI User is on Endpoint: url/Users with valid username and password
 	
 Scenario Outline: Validate the delete method for Users
-    When User sends request id ON DELETE Method from "<sheetName>" and <rowNumber>
-    Then User validates StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
-    And check the Database to validate deletion
+    When UsersAPI user sends request id ON DELETE Method from "<IDsheetName>" and <rowNumber>
+    Then UsersAPI User validates StatusCode and StatusMessage from "<sheetName>" sheet and <rowNumber> row
+    And  UsersAPI User check the Database to validate deletion from "<IDsheetName>" sheet and <rowNumber> row
     
     Examples:
-    | sheetName                  | rowNumber|
-    | InputData_UserSkills_DELETE| 0        |
-    | InputData_UserSkills_DELETE| 1        |
-    | InputData_UserSkills_DELETE| 2        |
-    | InputData_UserSkills_DELETE| 3        |
-    | InputData_UserSkills_DELETE| 4        |
+    | sheetName             | rowNumber|IDsheetName|
+    | InputData_Users_DELETE| 0        |InputData_Users_POST|
+    | InputData_Users_DELETE| 1        |InputData_Users_DELETE|
+    | InputData_Users_DELETE| 2        |InputData_Users_DELETE|
+    | InputData_Users_DELETE| 3        |InputData_Users_DELETE|
+    | InputData_Users_DELETE| 4        |InputData_Users_DELETE|
   
    

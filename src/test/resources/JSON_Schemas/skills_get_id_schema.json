@@ -7,15 +7,10 @@
     },
     "Skill_name": {
       "type": "string"
-    },
-   
-    "message": {
-      "type": "string"
     }
   },
   "required": [
     "Skill_Id",
-    "Skill_name",
-    "message"
+    "Skill_name"
   ]
-}
+}  

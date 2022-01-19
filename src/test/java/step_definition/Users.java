@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
@@ -137,7 +138,7 @@ public class Users {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
 
-		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 
 		Map<String, String> row = testData.get(RowNumber);
 		for (Map.Entry<String, String> entry : row.entrySet()) {
@@ -174,8 +175,10 @@ public class Users {
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
+		Map<String, Object> jsonMap = extractResponse(response);
+		assertNotNull(jsonMap);
 		if (this.lmsPojo.getStatus_message() != "") {
-			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
+			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
 		
 //		Map<String, Object> jsonMap = extractResponse_user(response);
@@ -191,7 +194,7 @@ public class Users {
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), getStr_Query);
 
-		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		
 		if (queryResult == null || queryResult.isEmpty()) {
 
@@ -220,7 +223,7 @@ public class Users {
 	
 	@And("^UsersAPI check the Database$")
 	public void usersAPI_check_the_database() throws Throwable {
-		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		String queryString = "\"SELECT user_id, CONCAT(user_first_name,',', user_last_name) as name, user_phone_number as phone_number, user_location as location, user_time_zone as time_zone, user_linkedin_url as linkedin_url FROM public.tbl_lms_user where user_id='"
 				+ jsonMap.get("user_id") + "'";
 
@@ -273,7 +276,7 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
 				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-			Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+			Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 	
 			Map<String, String> row = testData.get(rowNumber);
 			for (Map.Entry<String, String> entry : row.entrySet()) {
@@ -287,7 +290,7 @@ public class Users {
 	}
 	@Then("UsersAPI User check the Database to validate deletion from {string} sheet and {int} row")
 	public void users_api_check_the_database_to_validate_deletion_from_sheet_and_row(String sheetName, Integer rowNumber) throws Throwable, IOException {
-		Map<String, Object> jsonMap = extractResponse_user(this.lmsPojo.getRes_response());
+		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		if (jsonMap.get("user_id") != null) {
@@ -330,8 +333,22 @@ public class Users {
 	}
 
 
+//@SuppressWarnings({ "unchecked", "rawtypes" })
+//private Map<String, Object> extractResponse(Response response) {
+//	ResponseBody responseBody = response.getBody();
+//	assertNotNull(responseBody);
+//	Map<String, Object> jsonMap = null;
+//	ObjectMapper mapper = new ObjectMapper();
+//	try {
+//		jsonMap = (Map<String, Object>) mapper.readValue(responseBody.asString(), new TypeReference<List<Map<String, Object>>>(){});
+//	} catch (JsonProcessingException e) {
+//		// System.err.println(e.getMessage());
+//	}
+//	System.out.println("XXXXXXX" + jsonMap.toString());
+//	return jsonMap;
+//}
 @SuppressWarnings({ "unchecked", "rawtypes" })
-private Map<String, Object> extractResponse_user(Response response) {
+private Map<String, Object> extractResponse(Response response) {
 	ResponseBody responseBody = response.getBody();
 	assertNotNull(responseBody);
 	Map<String, Object> jsonMap = null;
@@ -341,10 +358,8 @@ private Map<String, Object> extractResponse_user(Response response) {
 	} catch (JsonProcessingException e) {
 		// System.err.println(e.getMessage());
 	}
-	System.out.println("XXXXXXX" + jsonMap.toString());
 	return jsonMap;
 }
-
 
 
 }

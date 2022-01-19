@@ -63,17 +63,10 @@ public class UserSkills {
 	    
 	}
 
-//
-//	@Given("User is on Endpoint: url\\/UserSkills")
-//	public void user_is_on_endpoint_url_user_skills() throws IOException {
-//		this.lmsPojo.setRequest_URL(
-//				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
-//
-//	}
-
 	@When("userSkills User sends GET request")
 	public void userSkills_user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/"+CONST_USERSKILLS_API);
+		System.out.println("base path is: "+ this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
@@ -87,7 +80,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
-		this.lmsPojo.setStr_basePath(CONST_USERSKILLS_API+"/" + this.lmsPojo.getStr_userskillsid());
+		this.lmsPojo.setStr_basePath("/"+CONST_USERSKILLS_API+ "/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 

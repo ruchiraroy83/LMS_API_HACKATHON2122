@@ -7,7 +7,8 @@ import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USER_ID;
 import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_USERSKILLS_API;
-
+import static util.constant.LMSApiConstant.CONST_SKILL_ID;
+import static util.constant.LMSApiConstant.CONST_SKILLS_API;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +28,14 @@ import io.restassured.internal.path.json.JSONAssertion;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+
 public class Send_Request_For_Method {
 	public static String NewAPIEndpoint;
 	private LMSPojo lmsPojo;
 
 	public Send_Request_For_Method(String API_Endpoint) {
 		NewAPIEndpoint = API_Endpoint;
-
+		
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(API_Endpoint);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 	}
@@ -71,12 +73,10 @@ public class Send_Request_For_Method {
 			
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
-				if (row.containsKey("Skill_name")) {
+				if (NewAPIEndpoint==CONST_SKILLS_API) {
 					if (value.equals("true") || value.equals("false") ) {
 						boolean b = Boolean.valueOf(value.toString());
 						value=b;
-						
-						
 					}
 
 	            if (StringUtils.isNumeric(entry.getValue())) {
@@ -127,12 +127,10 @@ public class Send_Request_For_Method {
 			row_put.remove(CONST_STATUS_MESSAGE);
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
-				if (row_put.containsKey("Skill_name")) {
+				if (NewAPIEndpoint==CONST_SKILLS_API) {
 					if (value.equals("true") || value.equals("false") ) {
 						boolean b = Boolean.valueOf(value.toString());
 						value=b;
-						
-						
 					}
 					
 					if (StringUtils.isNumeric(entry.getValue())) {

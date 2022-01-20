@@ -7,6 +7,7 @@ import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USER_ID;
+import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_USERS_API;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class Users {
 	@When("UsersAPI User sends GET request on userid from {string} and {int}")
 	public void UsersAPI_user_sends_get_request_on_userid_from_and(String sheetName, int rowNumber)
 			throws IOException, InvalidFormatException, InterruptedException {
-		
+		System.out.println(sheetName);
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
@@ -92,15 +93,32 @@ public class Users {
 				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
+	
+	@When("UsersAPI User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
+	public void UsersAPI_user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
+			throws InvalidFormatException, IOException {
+
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		this.lmsPojo.setStr_userid(testData.get(rowNumber).get(CONST_USER_ID));
+		System.out.println("######" + this.lmsPojo.getStr_userid());
+		this.lmsPojo.setStr_basePath("/Users/" + this.lmsPojo.getStr_userid());
+		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
+
+		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
+				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
+		this.lmsPojo.setRes_response(response);
+
+	}
 
 	
 	@Then("UsersAPI JSON schema is valid")
 	public void UsersAPI_json_schema_is_valid() {
-		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_SchemaFilePath());
-		System.out.println(this.lmsPojo.getGET_SchemaFilePath());
-		System.out.println(this.lmsPojo.getStr_SchemaFilePath());
+		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_AllSchemaFilePath());
+		System.out.println(this.lmsPojo.getGET_AllSchemaFilePath());
 		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-				this.lmsPojo.getGET_SchemaFilePath());
+		this.lmsPojo.getGET_AllSchemaFilePath());
 		
 ////		this.lmsPojo.setStr_SchemaFileallusers("User_Schema_GET.json");"src/test/resources/" +
 ////		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
@@ -193,7 +211,7 @@ public class Users {
 		String getStr_Query = "SELECT user_id, CONCAT(user_first_name,',', user_last_name) as name, user_phone_number as phone_number, user_location as location, user_time_zone as time_zone, user_linkedin_url as linkedin_url FROM public.tbl_lms_user";
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), getStr_Query);
-
+		System.out.println(queryResult);
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		
 		if (queryResult == null || queryResult.isEmpty()) {
@@ -224,12 +242,12 @@ public class Users {
 	@And("^UsersAPI check the Database$")
 	public void usersAPI_check_the_database() throws Throwable {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
-		String queryString = "\"SELECT user_id, CONCAT(user_first_name,',', user_last_name) as name, user_phone_number as phone_number, user_location as location, user_time_zone as time_zone, user_linkedin_url as linkedin_url FROM public.tbl_lms_user where user_id='"
-				+ jsonMap.get("user_id") + "'";
+		String queryString = "SELECT user_id, CONCAT(user_first_name,',', user_last_name) as name, user_phone_number as phone_number, user_location as location, user_time_zone as time_zone, user_linkedin_url as linkedin_url FROM public.tbl_lms_user where user_id='" + jsonMap.get("user_id") + "'";
 
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
 
+		System.out.println(queryResult);
 		if (queryResult == null || queryResult.isEmpty()) {
 
 			System.out.println("No records found");
@@ -288,6 +306,7 @@ public class Users {
 			}
 		}
 	}
+	
 	@Then("UsersAPI User check the Database to validate deletion from {string} sheet and {int} row")
 	public void users_api_check_the_database_to_validate_deletion_from_sheet_and_row(String sheetName, Integer rowNumber) throws Throwable, IOException {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());

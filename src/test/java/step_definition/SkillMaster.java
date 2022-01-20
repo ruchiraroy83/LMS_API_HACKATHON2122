@@ -1,6 +1,5 @@
 package step_definition;
 
-import static org.junit.Assert.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
@@ -8,6 +7,7 @@ import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_SCENARIO;
 import static util.constant.LMSApiConstant.CONST_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_SKILL_NAME;
+import static util.constant.LMSApiConstant.CONST_SKILLS_API;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 
@@ -68,7 +68,7 @@ public class SkillMaster {
 	@When("skills User sends GET request")
 	public void user_sends_get_request_on_skills() throws InvalidFormatException, IOException {
 		
-		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -82,7 +82,7 @@ public class SkillMaster {
         this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
 		
 		
-		this.lmsPojo.setStr_basePath("/Skills/" + this.lmsPojo.getStr_skillid());
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + this.lmsPojo.getStr_skillid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -93,7 +93,7 @@ public class SkillMaster {
 	}
 	@When("skills User sends POST request body in skills from {string} and {int} with valid JSON Schema")
 	public void user_sends_POST_request_body_from_and(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
         System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -103,7 +103,7 @@ public class SkillMaster {
 	}
 	@When("skills User sends POST request body in text format skills from {string} and {int}")
 	public void skills_User_sends_POST_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
         System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
        
@@ -130,7 +130,7 @@ public class SkillMaster {
 	  ObjectMapper mapper = new ObjectMapper();
 	  String requestString = mapper.writeValueAsString(finalMap);
 	  Response response = this.lmsPojo.getRequest_URL().header(HttpHeaders.CONTENT_TYPE, ContentType.TEXT).body(requestString).post(this.lmsPojo.getStr_FinalURI());
-        
+      System.out.println("Response:" + response);
 
 		if (response != null) {
 			System.out.println("Response :\n" + response.asString());
@@ -138,24 +138,29 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 	}
 	
-	@When("User sends PUT request body in skills from {string} and {int} with valid JSON Schema")
+	@When("skills User sends PUT request on id and request body in skills from {string} and {int} with valid JSON Schema")
 	public void user_sends_put_request_body_in_skills_from_and_with_valid_json_schema(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
+		
 		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
 		System.out.println(this.lmsPojo.getStr_skillid());
-		this.lmsPojo.setStr_basePath("/Skills/" + this.lmsPojo.getStr_skillid());
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + "/" + this.lmsPojo.getStr_skillid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-        System.out.println(testData.get(RowNumber).get(CONST_SKILL_NAME));
+		System.out.println(this.lmsPojo.getStr_FinalURI());
+		
+        
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
-	@When("skills User sends PUT request body in text format skills from {string} and {int}")
+	@When("skills User sends PUT request on id and request body in text format skills from {string} and {int}")
 	public void skills_User_sends_PUT_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/Skills");
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
         System.out.println("Final URI:" + this.lmsPojo.getStr_FinalURI());
+        
+        
        
         String numericColumns = this.lmsPojo.getNumericColumns();
         ExcelReader reader = new ExcelReader();
@@ -194,7 +199,7 @@ public class SkillMaster {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
 
 		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/Skills/" + this.lmsPojo.getStr_skillid());
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + this.lmsPojo.getStr_skillid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -268,13 +273,13 @@ public class SkillMaster {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
 
 		Map<String, String> scenario = testData.get(RowNumber);
-		String statusCodeString = scenario.get("StatusCode");
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
-		this.lmsPojo.setStatus_message(testData.get(RowNumber).get("StatusMessage"));
+		this.lmsPojo.setStatus_message(testData.get(RowNumber).get(CONST_STATUS_MESSAGE));
 
 		Response response = this.lmsPojo.getRes_response();
         System.out.println("GetStatusCode"+ response.getStatusCode());
@@ -301,6 +306,7 @@ public class SkillMaster {
 	}
 
 
+	
 	@Then("check the Database for skills")
 	public void check_the_database_for_all_skills() throws JsonMappingException, JsonProcessingException {
 		    String getStr_Query="select skill_id,skill_name from tbl_lms_skill_master";
@@ -331,13 +337,16 @@ public class SkillMaster {
 			}
 	}
 
+	
+
+
 	@And("skills check the Database")
 	public void check_the_database() throws JsonMappingException, JsonProcessingException {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		
-		if (jsonMap.get("Skill_Id") != null) {
+		if (jsonMap.get(CONST_SKILL_ID) != null) {
 			String queryString = "select skill_id,skill_name from tbl_lms_skill_master where skill_id='"
-					+ jsonMap.get("Skill_Id") + "'";
+					+ jsonMap.get(CONST_SKILL_ID) + "'";
 		
 		
 
@@ -373,7 +382,7 @@ public class SkillMaster {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-		if (jsonMap.get("Skill_Id") != null) {
+		if (jsonMap.get(CONST_SKILL_ID) != null) {
 		String queryString = "SELECT EXISTS(SELECT * FROM tbl_lms_userskill_map WHERE user_skill_id='"
 				+ DeltestData.get(rowNumber).get(CONST_SKILL_ID) + "'";
 

@@ -64,6 +64,7 @@ public class Send_Request_For_Method {
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
 			row.remove(CONST_SKILL_ID);
+			row.remove(CONST_USER_ID);
 			if (NewAPIEndpoint!=CONST_USERSKILLS_API) {
 				row.remove(CONST_USER_ID);				
 			}
@@ -124,7 +125,6 @@ public class Send_Request_For_Method {
             row_put.remove(CONST_SCENARIO);
 			row_put.remove(CONST_STATUS_CODE);
 			row_put.remove(CONST_STATUS_MESSAGE);
-            
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
 				if (row_put.containsKey("Skill_name")) {
@@ -142,9 +142,10 @@ public class Send_Request_For_Method {
 				}
 				if (numericColumns.contains(entry.getKey())) {
 					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
-							? Integer.parseInt(entry.getValue())
+							? Long.parseLong(entry.getValue())
 							: entry.getValue();
 				}
+				System.out.println("##" + entry.getKey() + " : |" + value + "|");
 				finalMap_put.put(entry.getKey(), value);
 			}
 			ObjectMapper mapper_put = new ObjectMapper();

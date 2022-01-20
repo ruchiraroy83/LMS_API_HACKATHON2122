@@ -215,8 +215,10 @@ public class UserSkills {
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
+		Map<String, Object> jsonMap = extractResponse(response);
+		assertNotNull(jsonMap);
 		if (this.lmsPojo.getStatus_message() != "") {
-			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
+			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
 
 	}

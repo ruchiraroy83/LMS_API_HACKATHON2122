@@ -219,7 +219,7 @@ public class SkillMaster {
 		for (Map.Entry<String, String> entry : row.entrySet()) {
 			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
 				if (mapResponse.getKey() == entry.getKey()) {
-					assertEquals(mapResponse.getKey(), entry.getKey());
+					assertEquals(mapResponse.getValue(), entry.getValue());
 				}
 
 			}

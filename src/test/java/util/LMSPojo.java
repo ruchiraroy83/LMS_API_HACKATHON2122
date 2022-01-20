@@ -10,6 +10,7 @@ public class LMSPojo {
 	private String str_GETidSkillsSchema;
 	private String str_POSTSkillsSchema;
 	private String str_userid;
+	private String str_UserFilePath;
 	
 	private String excelPath;
 	private String GET_SchemaFilePath;
@@ -40,6 +41,12 @@ public class LMSPojo {
 	private String status_message;
 	private String numericColumns;
 	private String str_SchemaFileallusers;
+	public String getStr_UserFilePath() {
+		return str_UserFilePath;
+	}
+	public void setStr_UserFilePath(String str_UserFilePath) {
+		this.str_UserFilePath = str_UserFilePath;
+	}
 	public String getStr_GETidSkillsSchema() {
 		return str_GETidSkillsSchema;
 	}

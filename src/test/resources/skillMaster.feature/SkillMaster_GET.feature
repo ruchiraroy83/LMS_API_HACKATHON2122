@@ -22,4 +22,3 @@ Scenario Outline: Verify GET for a Skill with specific ID
    	|Skills_GET|3       | GET   |
    	|Skills_GET|4       | GET   |
    	|Skills_GET|5       | GET   |
-   	

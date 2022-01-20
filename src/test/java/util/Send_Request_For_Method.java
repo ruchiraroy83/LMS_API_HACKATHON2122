@@ -143,9 +143,9 @@ public class Send_Request_For_Method {
 							? Long.parseLong(entry.getValue())
 							: entry.getValue();
 				}
-				System.out.println("##" + entry.getKey() + " : |" + value + "|");
 				finalMap_put.put(entry.getKey(), value);
 			}
+			
 			ObjectMapper mapper_put = new ObjectMapper();
 			String requestString_put = mapper_put.writeValueAsString(finalMap_put);
 			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);

@@ -8,7 +8,7 @@ Feature: To check The PUT method for Users
     Then UsersAPI User validates StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And UsersAPI JSON schema is valid for "<Method>"
     And UsersAPI User should receive a list of user in JSON body with the fields like user_id,name,phone_number,location,time_zone,linkedin_url from "<SheetName>" and <RowNumber>
-    And check the Database
+    And UsersAPI check the Database
 
     Examples: 
       | SheetName           | RowNumber | Method |

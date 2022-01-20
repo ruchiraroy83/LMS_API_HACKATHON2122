@@ -102,7 +102,6 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userid(testData.get(rowNumber).get(CONST_USER_ID));
-		System.out.println("######" + this.lmsPojo.getStr_userid());
 		this.lmsPojo.setStr_basePath("/Users/" + this.lmsPojo.getStr_userid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -247,7 +246,6 @@ public class Users {
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
 
-		System.out.println(queryResult);
 		if (queryResult == null || queryResult.isEmpty()) {
 
 			System.out.println("No records found");
@@ -261,8 +259,10 @@ public class Users {
 						if (obj != null && obj instanceof Integer) {
 							assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
 									queryResultFinal.getValue());
-
-						} else {
+						} else if (obj != null && obj instanceof Long) {
+							assertEquals(Long.toString((Long) jsonMapFinal.getValue()),
+									queryResultFinal.getValue());
+						} else {				
 							assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
 						}
 					}

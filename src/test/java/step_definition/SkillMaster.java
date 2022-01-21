@@ -200,7 +200,7 @@ public class SkillMaster {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
 
 		this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + this.lmsPojo.getStr_skillid());
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API +"/"+ this.lmsPojo.getStr_skillid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),

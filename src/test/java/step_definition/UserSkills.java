@@ -1,11 +1,22 @@
+/*******************************************************************************************************************************************************
+ * class Name: UserSkills
+ * 
+ * Purpose: Step Defination for User Skills
+ * 
+ *******************************************************************************************************************************************************/
+
 package step_definition;
 
-import static org.junit.Assert.assertFalse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USERSKILLS_API;
+import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
@@ -30,19 +40,14 @@ import util.Fetch_Data_From_SQL;
 import util.JSON_Schema_Validation;
 import util.LMSPojo;
 import util.Send_Request_For_Method;
-import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
-import static util.constant.LMSApiConstant.CONST_POST_SUCCESS_STATUS_CODE;
-import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
-import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
-import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
-import static util.constant.LMSApiConstant.CONST_USERSKILLS_API;
 
 public class UserSkills {
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_USERSKILLS_API);
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(
+				CONST_USERSKILLS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method(CONST_USERSKILLS_API);
 	}
@@ -53,20 +58,21 @@ public class UserSkills {
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
+
 	@Given("userSkill User with  username & password from {string} and {int} is on Endpoint: url\\/UserSkills")
-	public void user_skill_user_with_username_password_from_and_is_on_endpoint_url_user_skills(String sheetName, Integer rowNumber) throws Throwable, IOException {
+	public void user_skill_user_with_username_password_from_and_is_on_endpoint_url_user_skills(String sheetName,
+			Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
-		this.lmsPojo.setRequest_URL(
-				Send_Request_For_Method.request_URL(testData.get(rowNumber).get("UserName"), testData.get(rowNumber).get("Password")));
+		this.lmsPojo.setRequest_URL(Send_Request_For_Method.request_URL(testData.get(rowNumber).get("UserName"),
+				testData.get(rowNumber).get("Password")));
 
-	    
 	}
 
 	@When("userSkills User sends GET request")
 	public void userSkills_user_sends_request() throws InterruptedException, InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath("/"+CONST_USERSKILLS_API);
-		System.out.println("base path is: "+ this.lmsPojo.getStr_basePath());
+		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API);
+		System.out.println("base path is: " + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
@@ -80,7 +86,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/"+CONST_USERSKILLS_API+ "/" + this.lmsPojo.getStr_userskillsid());
+		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API + "/" + this.lmsPojo.getStr_userskillsid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -138,7 +144,7 @@ public class UserSkills {
 
 	@Then("userSkills JSON schema is valid")
 	public void userSkills_json_schema_is_valid() {
-		
+
 		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getGET_AllSchemaFilePath());
 		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 				this.lmsPojo.getStr_SchemaFilePath());
@@ -198,9 +204,10 @@ public class UserSkills {
 		}
 
 	}
-	
+
 	@Then("userSkills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
-	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
+	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(
+			String sheetName, Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
@@ -215,7 +222,6 @@ public class UserSkills {
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
-
 		if (this.lmsPojo.getStatus_message() != "") {
 			assertEquals(response.getBody().asString(), this.lmsPojo.getStatus_message());
 		}
@@ -225,7 +231,7 @@ public class UserSkills {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, Object> extractResponse(Response response) {
 		ResponseBody responseBody = response.getBody();
-		System.out.println("Response body is :"+ response.getBody().asString());
+		System.out.println("Response body is :" + response.getBody().asString());
 		assertNotNull(responseBody);
 		Map<String, Object> jsonMap = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -255,9 +261,8 @@ public class UserSkills {
 
 				}
 			}
-			
+
 		}
-		
 
 	}
 
@@ -326,7 +331,7 @@ public class UserSkills {
 	}
 
 	@And("userSkills users check the Database to validate deletion from {string} sheet and {int} row")
-	public void check_the_Database_to_validate_deletion(String sheetName,int rowNumber ) throws Throwable, IOException {
+	public void check_the_Database_to_validate_deletion(String sheetName, int rowNumber) throws Throwable, IOException {
 
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);

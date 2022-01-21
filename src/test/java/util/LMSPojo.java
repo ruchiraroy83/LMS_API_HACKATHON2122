@@ -1,3 +1,12 @@
+/*******************************************************************************************************************************************************
+ * class Name: LMSPojo
+ * 
+ * Methods: Contains Getter & setter methods for the private variables
+ * 
+ * Purpose: to protect the data & have control over values to be used
+ * 
+ *******************************************************************************************************************************************************/
+
 package util;
 
 import io.restassured.response.Response;

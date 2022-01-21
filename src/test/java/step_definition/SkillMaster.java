@@ -10,23 +10,18 @@ import static util.constant.LMSApiConstant.CONST_SKILL_NAME;
 import static util.constant.LMSApiConstant.CONST_SKILLS_API;
 import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
 import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USERNAME;
+import static util.constant.LMSApiConstant.CONST_PASSWORD;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.hamcrest.collection.IsMapContaining;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,7 +34,6 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import util.ExcelReader;
-import util.ExcelWriter;
 import util.Fetch_Data_From_Properties_File;
 import util.Fetch_Data_From_SQL;
 import util.JSON_Schema_Validation;
@@ -51,12 +45,11 @@ public class SkillMaster {
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public SkillMaster() {
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("Skills");
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_SKILLS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
-		this.send_Request_For_Method = new Send_Request_For_Method("Skills");
+		this.send_Request_For_Method = new Send_Request_For_Method(CONST_SKILLS_API);
 	}
-
-
+	
    @Given("Skills User is on Endpoint: url\\/Skills with valid username and password")
 	public void skills_user_is_on_endpoint_url_user_skills() throws IOException {
 		
@@ -64,7 +57,15 @@ public class SkillMaster {
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
-	
+   @Given("Skills User with  username & password from {string} and {int} is on Endpoint: url\\/Skills")
+	public void Skills_User_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+		this.lmsPojo.setRequest_URL(
+				
+				Send_Request_For_Method.request_URL(testData.get(rowNumber).get(CONST_USERNAME), testData.get(rowNumber).get(CONST_PASSWORD)));
+
+	}
 	@When("skills User sends GET request")
 	public void user_sends_get_request_on_skills() throws InvalidFormatException, IOException {
 		
@@ -82,7 +83,7 @@ public class SkillMaster {
         this.lmsPojo.setStr_skillid(testData.get(RowNumber).get(CONST_SKILL_ID));
 		
 		
-		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + this.lmsPojo.getStr_skillid());
+		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API + "/"+ this.lmsPojo.getStr_skillid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -219,7 +220,7 @@ public class SkillMaster {
 		for (Map.Entry<String, String> entry : row.entrySet()) {
 			for (Map.Entry<String, Object> mapResponse : jsonMap.entrySet()) {
 				if (mapResponse.getKey() == entry.getKey()) {
-					assertEquals(mapResponse.getKey(), entry.getKey());
+					assertEquals(mapResponse.getValue(), entry.getValue());
 				}
 
 			}
@@ -303,6 +304,28 @@ public class SkillMaster {
 		ObjectMapper mapper = new ObjectMapper();
 		jsonMap = mapper.readValue(responseBody.asString(), Map.class);
 		return jsonMap;
+	}
+	@Then("Skills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
+	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		Map<String, String> scenario = testData.get(rowNumber);
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
+
+		if (!StringUtils.isEmpty(statusCodeString)) {
+			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
+		}
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
+		Response response = this.lmsPojo.getRes_response();
+		assertNotNull(response);
+		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
+
+
+		if (this.lmsPojo.getStatus_message() != "") {
+			assertEquals(response.getBody().asString(), this.lmsPojo.getStatus_message());
+		}
+
 	}
 
 

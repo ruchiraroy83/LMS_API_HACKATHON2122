@@ -10,13 +10,13 @@
 			<version>3.3.0</version>
 			<scope>test</scope>
 		</dependency>
-        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
@@ -25,11 +25,18 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
 		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber4-jvm -->
+		<dependency>
 		    <groupId>io.qameta.allure</groupId>
-		    <artifactId>allure-testng</artifactId>
+		    <artifactId>allure-cucumber4-jvm</artifactId>
 		    <version>2.17.2</version>
 		</dependency>
-		
+
+
 		<!-- https://mvnrepository.com/artifact/junit/junit-dep -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -63,24 +70,24 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-core -->
 		<dependency>
-		    <groupId>io.cucumber</groupId>
-		    <artifactId>cucumber-core</artifactId>
-		    <version>6.10.3</version>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-core</artifactId>
+			<version>6.10.3</version>
 		</dependency>
 
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.2</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>4.1.2</version>
@@ -92,17 +99,43 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-core</artifactId>
-		    <version>2.13.1</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.1</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.3.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>tech.grasshopper</groupId>
+			<artifactId>extentreports-cucumber6-adapter</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 
 
 	</dependencies>
+	<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.20</version>
+            <configuration>
+                <argLine>
+                    -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    -Dcucumber.options="--plugin io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm"
+                </argLine>
+            </configuration>
+            <dependencies>
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                    <version>1.9.7</version>
+                </dependency>
+            </dependencies>
+        </plugin>
+    </plugins>
+</build>
 </project>

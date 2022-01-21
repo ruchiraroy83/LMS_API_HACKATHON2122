@@ -9,6 +9,8 @@ import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
 import static util.constant.LMSApiConstant.CONST_USER_ID;
 import static util.constant.LMSApiConstant.CONST_USER_SKILL_ID;
 import static util.constant.LMSApiConstant.CONST_USERS_API;
+import static util.constant.LMSApiConstant.CONST_USERNAME;
+import static util.constant.LMSApiConstant.CONST_PASSWORD;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,9 +42,9 @@ public class Users {
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public Users() {
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("Users");
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_USERS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
-		this.send_Request_For_Method = new Send_Request_For_Method("Users");
+		this.send_Request_For_Method = new Send_Request_For_Method(CONST_USERS_API);
 	}
 
 	@Given("UsersAPI User is on Endpoint: url\\/Users with valid username and password")
@@ -55,13 +57,13 @@ public class Users {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 		this.lmsPojo.setRequest_URL(
-				Send_Request_For_Method.request_URL(testData.get(rowNumber).get("UserName"), testData.get(rowNumber).get("Password")));
+				Send_Request_For_Method.request_URL(testData.get(rowNumber).get(CONST_USERNAME), testData.get(rowNumber).get(CONST_PASSWORD)));
 	    
 	}
 
 	@When("UsersAPI User sends GET request")
 	public void UsersAPI_user_sends_request_users_api() throws InterruptedException, InvalidFormatException, IOException {
-		this.lmsPojo.setStr_basePath(CONST_USERS_API);
+		this.lmsPojo.setStr_basePath("/"+CONST_USERS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
@@ -75,7 +77,7 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userid(testData.get(rowNumber).get("Users_ID"));
-		this.lmsPojo.setStr_basePath(CONST_USERS_API+"/" + this.lmsPojo.getStr_userid());
+		this.lmsPojo.setStr_basePath("/"+CONST_USERS_API+"/" + this.lmsPojo.getStr_userid());
 
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 		
@@ -102,7 +104,6 @@ public class Users {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userid(testData.get(rowNumber).get(CONST_USER_ID));
-		System.out.println("######" + this.lmsPojo.getStr_userid());
 		this.lmsPojo.setStr_basePath("/Users/" + this.lmsPojo.getStr_userid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
@@ -198,12 +199,30 @@ public class Users {
 		if (this.lmsPojo.getStatus_message() != "") {
 			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
-		
-//		Map<String, Object> jsonMap = extractResponse_user(response);
-//		assertNotNull(jsonMap);
-//		if (this.lmsPojo.getStatus_message()!="") {
-//			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
-//		}
+
+	}
+	
+	@Then("UsersAPI User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
+	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		Map<String, String> scenario = testData.get(rowNumber);
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
+
+		if (!StringUtils.isEmpty(statusCodeString)) {
+			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
+		}
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
+		Response response = this.lmsPojo.getRes_response();
+		assertNotNull(response);
+		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
+
+
+		if (this.lmsPojo.getStatus_message() != "") {
+			assertEquals(response.getBody().asString(), this.lmsPojo.getStatus_message());
+		}
+
 	}
 
 	@Then("check the Database for all users")
@@ -247,7 +266,6 @@ public class Users {
 		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
 				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
 
-		System.out.println(queryResult);
 		if (queryResult == null || queryResult.isEmpty()) {
 
 			System.out.println("No records found");
@@ -261,8 +279,10 @@ public class Users {
 						if (obj != null && obj instanceof Integer) {
 							assertEquals(Integer.toString((Integer) jsonMapFinal.getValue()),
 									queryResultFinal.getValue());
-
-						} else {
+						} else if (obj != null && obj instanceof Long) {
+							assertEquals(Long.toString((Long) jsonMapFinal.getValue()),
+									queryResultFinal.getValue());
+						} else {				
 							assertEquals((String) jsonMapFinal.getValue(), queryResultFinal.getValue());
 						}
 					}

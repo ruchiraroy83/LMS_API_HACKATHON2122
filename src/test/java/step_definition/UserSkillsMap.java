@@ -7,6 +7,10 @@ import static org.junit.Assert.assertFalse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_PASSWORD;
+import static util.constant.LMSApiConstant.CONST_STATUS_CODE;
+import static util.constant.LMSApiConstant.CONST_STATUS_MESSAGE;
+import static util.constant.LMSApiConstant.CONST_USERNAME;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_ENDPOINT;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_SKILLQUERY_ENDPOINT;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_USERQUERY_ENDPOINT;
@@ -54,6 +58,15 @@ public class UserSkillsMap {
 	public void user_skills_map_user_is_on_endpoint_url_user_skills_map_with_valid_username_and_password() throws IOException {
 		this.lmsPojo.setRequest_URL(Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 	}
+	@Given("UserSkillsMap User with  username & password from {string} and {int}  is on Endpoint: url\\/UserSkillsMap\"")
+		public void Skills_User_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
+			ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+			this.lmsPojo.setRequest_URL(
+					
+					Send_Request_For_Method.request_URL(testData.get(rowNumber).get(CONST_USERNAME), testData.get(rowNumber).get(CONST_PASSWORD)));
+
+		}
 
 	@When("UserSkillsMap User sends GET request")
 	public void user_skills_map_user_sends_get_request() throws InterruptedException, InvalidFormatException, IOException {
@@ -160,6 +173,28 @@ public class UserSkillsMap {
 		if (this.lmsPojo.getStatus_message() != "") {
 			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
+	}
+	@Then("UserSkillsMap User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
+	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
+
+		Map<String, String> scenario = testData.get(rowNumber);
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
+
+		if (!StringUtils.isEmpty(statusCodeString)) {
+			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
+		}
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
+		Response response = this.lmsPojo.getRes_response();
+		assertNotNull(response);
+		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
+
+
+		if (this.lmsPojo.getStatus_message() != "") {
+			assertEquals(response.getBody().asString(), this.lmsPojo.getStatus_message());
+		}
+
 	}
 
 	@Then("UserSkillsMap_skill JSON schema is valid")

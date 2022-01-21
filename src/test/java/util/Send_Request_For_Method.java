@@ -1,3 +1,16 @@
+/*******************************************************************************************************************************************************
+ * class Name: Send_Request_For_Method
+ * 
+ * Methods: 1.request_URL(String Username, String Password)
+ * 			2.Sent_request(String strURL, RequestSpecification httpRequest, HttpMethod httpmethod,String ExcelPath, String SheetName,int rowNumber)
+ * 
+ * Purpose: 1.request_URL will take the input of username & password & it will create a request Specification of basic auth type with the given username &password.
+ * 			Return type is the Request Specification created in the method.
+ * 			2.Sent_request: To sent request  & get corresponding response based on the type of method.For Post & PUT method it will create a request body dynamically from the external excel data based on the column names & row number.
+ * 			Return Type : Response
+ * 
+ *******************************************************************************************************************************************************/
+
 package util;
 
 import static util.constant.LMSApiConstant.CONST_SCENARIO;
@@ -34,43 +47,47 @@ public class Send_Request_For_Method {
 	private LMSPojo lmsPojo;
 
 	public Send_Request_For_Method(String API_Endpoint) {
-		NewAPIEndpoint = API_Endpoint;
+		NewAPIEndpoint = API_Endpoint; //endpoint name has been assigned to a variable which is used to create POST or PUT the request body for that particular endpoint
 		
+		//fetching all the data from the properties files for a given endpoint
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(API_Endpoint);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 	}
 
+	//method to create a request Specification of basic auth type with the given username & password
 	public static RequestSpecification request_URL(String Username, String Password) {
 
-		// Request object
+		// return Request object
 		return RestAssured.given().auth().preemptive().basic(Username, Password);
 
 	}
 
-	// public static Response Sent_request(String strURL,RequestSpecification
-	// httpRequest, HttpMethod httpmethod,String strCoulumnName[], String
-	// str_Input[]) {
+	//Method to create a request body based on the request type dynamically from the excel  & get the respose based on the method
 	public Response Sent_request(String strURL, RequestSpecification httpRequest, HttpMethod httpmethod,
 			String ExcelPath, String SheetName,int rowNumber) throws InvalidFormatException, IOException {
 		Response response = null;
 		String numericColumns = this.lmsPojo.getNumericColumns();
 		switch (httpmethod) {
 		case POST:
+			//Getting the data from the excel in form of key value pair for a particular row.
 			ExcelReader reader = new ExcelReader();
 			List<Map<String, String>> excelRows = reader.getData("./" + ExcelPath, SheetName);
 			Map<String, Object> finalMap = new HashMap<>();
 
 			Map<String, String> row = excelRows.get(rowNumber);
+			//removing the colums & their values from the fetched data of excel which are not required in the request body
 			row.remove(CONST_SCENARIO);
 			row.remove(CONST_STATUS_CODE);
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
 			row.remove(CONST_SKILL_ID);
 			row.remove(CONST_USER_ID);
-			if (NewAPIEndpoint!=CONST_USERSKILLS_API) {
+			//User_id with be removed from the request body only if the API end point is Users as it will be automatically get generated in the response
+			if (NewAPIEndpoint==CONST_USER_ID) {
 				row.remove(CONST_USER_ID);				
 			}
 			
+			//creating the request body by taking the column name as key & column value as value of the entry
 			for (Map.Entry<String, String> entry : row.entrySet()) {
 				Object value = entry.getValue();
 				if (NewAPIEndpoint==CONST_SKILLS_API) {
@@ -78,7 +95,7 @@ public class Send_Request_For_Method {
 						boolean b = Boolean.valueOf(value.toString());
 						value=b;
 					}
-
+					//converting the data from the excel to integar for the fields which are mentioned to be numeric in the properties file
 	            if (StringUtils.isNumeric(entry.getValue())) {
 					       value =  Integer.parseInt(entry.getValue());
 						    
@@ -95,18 +112,17 @@ public class Send_Request_For_Method {
 			ObjectMapper mapper = new ObjectMapper();
 			String requestString = mapper.writeValueAsString(finalMap);
 			
-			System.out.println("Request is :" +requestString);
+			//creating the JSON response for post 			
 			response = httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON).body(requestString).post(strURL);
 
 			if (response != null) {
-				System.out.println("Response :\n" + response.asString());
-
+				// comparing the request & response & capturing the extra field in response as key value pair
 				Map<String, Object> unmatchedFields = getUnMatchedFields(requestString, response.asString());
 
 				for (Map.Entry<String, Object> map : unmatchedFields.entrySet()) {
+					//writing into the excel in the required column value which was capture in response as extra field...like the autogenerate ID, User_Id incase of users,Skills_Id in case of Skills & User-Skill_id in case of UserSkills
 					ExcelWriter writer = new ExcelWriter();
-					boolean status;
-					status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
+					 boolean status = writer.writeExcelFile(ExcelPath, SheetName, rowNumber + 1, map.getKey(),
 							map.getValue());
 				}
 
@@ -114,17 +130,20 @@ public class Send_Request_For_Method {
 			break;
 
 		case PUT:
-
+			//Getting the data from the excel in form of key value pair for a particular row.
 			ExcelReader reader_put = new ExcelReader();
 
 			List<Map<String, String>> excelRows_put = reader_put.getData("./" + ExcelPath, SheetName);
 			Map<String, Object> finalMap_put = new HashMap<>();
 			Map<String, String> row_put = excelRows_put.get(rowNumber);
+			
+			//removing the colums & their values from the fetched data of excel which are not required in the request body
 			row_put.remove(CONST_USER_SKILL_ID);
 			row_put.remove(CONST_SKILL_ID);
             row_put.remove(CONST_SCENARIO);
 			row_put.remove(CONST_STATUS_CODE);
 			row_put.remove(CONST_STATUS_MESSAGE);
+			//creating the request body by taking the column name as key & column value as value of the entry
 			for (Map.Entry<String, String> entry : row_put.entrySet()) {
 				Object value = entry.getValue();
 				if (NewAPIEndpoint==CONST_SKILLS_API) {
@@ -132,7 +151,7 @@ public class Send_Request_For_Method {
 						boolean b = Boolean.valueOf(value.toString());
 						value=b;
 					}
-					
+					//converting the data from the excel to integar for the fields which are mentioned to be numeric in the properties file
 					if (StringUtils.isNumeric(entry.getValue())) {
 					       value =  Integer.parseInt(entry.getValue());
 						    
@@ -145,7 +164,7 @@ public class Send_Request_For_Method {
 				}
 				finalMap_put.put(entry.getKey(), value);
 			}
-			
+			//creating the JSON response for put
 			ObjectMapper mapper_put = new ObjectMapper();
 			String requestString_put = mapper_put.writeValueAsString(finalMap_put);
 			httpRequest.header(HttpHeaders.CONTENT_TYPE, ContentType.JSON);
@@ -158,12 +177,14 @@ public class Send_Request_For_Method {
 			break;
 
 		case GET:
+			//creating the JSON response for GET 	
 			RestAssured.baseURI = strURL;
 			response = httpRequest.when().get(RestAssured.baseURI);
 			System.out.println("Response :" + response.asString());
 			break;
 
 		case DELETE:
+			//creating the JSON response for DELETE
 			RestAssured.baseURI = strURL;
 			response = httpRequest.when().delete(RestAssured.baseURI);
 			System.out.println("Response :" + response.asString());
@@ -177,7 +198,7 @@ public class Send_Request_For_Method {
 		return response;
 	}
 
-
+	// method to find the extra field in the response body by comparing it with request as key value pair.If key to key is not matching then capturing the value
 	private Map<String, Object> getUnMatchedFields(String requestString, String responseString) {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> map = new HashedMap<>();

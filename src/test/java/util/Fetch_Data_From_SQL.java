@@ -1,3 +1,13 @@
+/*******************************************************************************************************************************************************
+ * class Name: Fetch_Data_From_SQL
+ * 
+ * Methods:connect(String str_URL, String str_UserName, String str_Pwd, String str_Query)
+ * 
+ * Purpose: 1.To Get the result of the query to the database in a key value format
+ * 
+ *******************************************************************************************************************************************************/
+
+
 package util;
 
 import java.sql.Connection;
@@ -10,17 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Fetch_Data_From_SQL {
-	// Declaration of the variables
-
-	// call to method to fetch data from property file will be there instead of
-	// declataion of variables here. This will be in main class. Its here just for
-	// testing purpose
-	/*
-	 * private final String str_URL = "jdbc:postgresql://localhost/LMS_DB"; private
-	 * final String str_UserName = "postgres"; private final String str_Pwd =
-	 * "postgres"; private final String fname=null;
-	 */
-
+	
 	// Method to initalize connection to the database and execute query
 
 	@SuppressWarnings("finally")

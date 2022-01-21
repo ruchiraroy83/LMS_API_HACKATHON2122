@@ -1,3 +1,14 @@
+/*******************************************************************************************************************************************************
+ * class Name: Fetch_Data_From_Properties_File
+ * 
+ * Methods: readPropertiesFile(String FilePath)
+ * 
+ * Purpose: To read all the data from the properties files & get the data based on the END point
+ * return type: properties
+ * 
+ *******************************************************************************************************************************************************/
+
+
 package util;
 
 import java.io.FileInputStream;
@@ -11,6 +22,7 @@ public class Fetch_Data_From_Properties_File {
 	public Fetch_Data_From_Properties_File(String API_Endpoint) {
 		this.lmsPojo = new LMSPojo();
 		try {
+			//Data has been from in different properties file based on the endpoint requested
 			Properties prop = readPropertiesFile("./src/test/resources/config/credentials.properties");
 			this.lmsPojo.setStr_baseURL(prop.getProperty("URL"));
 			this.lmsPojo.setUserName(prop.getProperty("Username"));

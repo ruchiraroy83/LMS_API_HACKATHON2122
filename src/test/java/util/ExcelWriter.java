@@ -1,3 +1,13 @@
+/*******************************************************************************************************************************************************
+ * class Name: ExcelWriter
+ * 
+ * Methods: readPropertiesFile(String FilePath)writeExcelFile(String excelFilePath, String sheetName, int rowNumber, String columnName,Object cellValue)
+ * return Type: Void
+ * 
+ * Purpose: To write into excel of the given path with a value 
+ * 
+ *******************************************************************************************************************************************************/
+
 package util;
 
 import java.io.File;
@@ -14,14 +24,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class ExcelWriter {
 
-//	public static void main(String[] args) {
-//		ExcelWriter excelWriter2 = new ExcelWriter();
-//		excelWriter2.writeExcelFile("user_skills_id","I am Great");
-//	}
 
 	public boolean writeExcelFile(String excelFilePath, String sheetName, int rowNumber, String columnName,
 			Object cellValue) {
-		// String excelFilePath = "C:/@Ruchira/@TestFiles/InputData_UserSkills.xlsx";
 		boolean status;
 		try {
 			String path = "src/test/resources/" + excelFilePath;

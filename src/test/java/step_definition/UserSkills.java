@@ -42,9 +42,9 @@ public class UserSkills {
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("UserSkills");
+		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_USERSKILLS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
-		this.send_Request_For_Method = new Send_Request_For_Method("UserSkills");
+		this.send_Request_For_Method = new Send_Request_For_Method(CONST_USERSKILLS_API);
 	}
 
 	@Given("userSkills User is on Endpoint: url\\/UserSkills with valid username and password")
@@ -215,8 +215,9 @@ public class UserSkills {
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
+
 		if (this.lmsPojo.getStatus_message() != "") {
-			assertEquals(response.asString(), this.lmsPojo.getStatus_message());
+			assertEquals(response.getBody().asString(), this.lmsPojo.getStatus_message());
 		}
 
 	}
@@ -224,6 +225,7 @@ public class UserSkills {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, Object> extractResponse(Response response) {
 		ResponseBody responseBody = response.getBody();
+		System.out.println("Response body is :"+ response.getBody().asString());
 		assertNotNull(responseBody);
 		Map<String, Object> jsonMap = null;
 		ObjectMapper mapper = new ObjectMapper();

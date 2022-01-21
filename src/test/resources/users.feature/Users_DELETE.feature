@@ -5,7 +5,7 @@ Background:
 Scenario Outline: Validate the delete method for Users
     When UsersAPI user sends request id ON DELETE Method from "<IDsheetName>" and <rowNumber>
     Then UsersAPI User validates StatusCode and StatusMessage from "<sheetName>" sheet and <rowNumber> row
-    And  UsersAPI User check the Database to validate deletion from "<IDsheetName>" sheet and <rowNumber> row
+ #   And  UsersAPI User check the Database to validate deletion from "<IDsheetName>" sheet and <rowNumber> row
     
     Examples:
     | sheetName             | rowNumber|IDsheetName|

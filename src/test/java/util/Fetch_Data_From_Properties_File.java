@@ -22,7 +22,9 @@ public class Fetch_Data_From_Properties_File {
 	public Fetch_Data_From_Properties_File(String API_Endpoint) {
 		this.lmsPojo = new LMSPojo();
 		try {
-			//Data has been from in different properties file based on the endpoint requested
+			/**
+			 * Data has been from in different properties file based on the endpoint requested
+			 */
 			Properties prop = readPropertiesFile("./src/test/resources/config/credentials.properties");
 			this.lmsPojo.setStr_baseURL(prop.getProperty("URL"));
 			this.lmsPojo.setUserName(prop.getProperty("Username"));
@@ -95,14 +97,5 @@ public class Fetch_Data_From_Properties_File {
 		this.lmsPojo = lmsPojo;
 	}
 
-	// Example of how to call in main method
-	/*
-	 * public static void main(String[] args) throws IOException { Properties prop =
-	 * readPropertiesFile("credentials.properties"); String
-	 * str_User=prop.getProperty("username"); String
-	 * str_password=prop.getProperty("Password");
-	 * 
-	 * }
-	 */
-
+	
 }

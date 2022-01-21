@@ -13,7 +13,7 @@ Feature: To check The PUT method for Users
     Examples: 
       | SheetName           | RowNumber | Method |
       | InputData_Users_PUT |         0 | PUT    |
-      #| InputData_Users_PUT |         1 | PUT    |
-      #| InputData_Users_PUT |         2 | PUT    |
+      | InputData_Users_PUT |         1 | PUT    |
+      | InputData_Users_PUT |         2 | PUT    |
       #| InputData_Users_PUT |         3 | PUT    |
       #| InputData_Users_PUT |         4 | PUT    |

@@ -28,7 +28,7 @@ import io.restassured.internal.path.json.JSONAssertion;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
+import static util.constant.LMSApiConstant.CONST_USERS_API;
 public class Send_Request_For_Method {
 	public static String NewAPIEndpoint;
 	private LMSPojo lmsPojo;
@@ -66,7 +66,6 @@ public class Send_Request_For_Method {
 			row.remove(CONST_STATUS_MESSAGE);
 			row.remove(CONST_USER_SKILL_ID);
 			row.remove(CONST_SKILL_ID);
-			row.remove(CONST_USER_ID);
 			if (NewAPIEndpoint!=CONST_USERSKILLS_API) {
 				row.remove(CONST_USER_ID);				
 			}
@@ -81,15 +80,25 @@ public class Send_Request_For_Method {
 
 	            if (StringUtils.isNumeric(entry.getValue())) {
 					       value =  Integer.parseInt(entry.getValue());
-						    
+						    }
+				}
+				if (NewAPIEndpoint==CONST_USERS_API) {
+					if (numericColumns.contains(entry.getKey())) {
+						System.out.println("Entry value:"+ entry.getValue());
+						value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
+								? Double.parseDouble(entry.getValue())
+								: entry.getValue();
 					}
 				}
-
-				if (numericColumns.contains(entry.getKey())) {
+				
+                if (NewAPIEndpoint==CONST_USERSKILLS_API) {
+				  if (numericColumns.contains(entry.getKey())) {
+					System.out.println("Entry value:"+ entry.getValue());
 					value = (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNumeric(entry.getValue()))
 							? Integer.parseInt(entry.getValue())
 							: entry.getValue();
 				}
+                }
 				finalMap.put(entry.getKey(), value);
 			}
 			ObjectMapper mapper = new ObjectMapper();

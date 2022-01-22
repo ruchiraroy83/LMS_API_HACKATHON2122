@@ -228,6 +228,7 @@ public class LMSPojo {
 	}
 	public String getPOST_SchemaFilePath() {
 		return POST_SchemaFilePath;
+		
 	}
 	public void setPOST_SchemaFilePath(String pOST_SchemaFilePath) {
 		POST_SchemaFilePath = pOST_SchemaFilePath;

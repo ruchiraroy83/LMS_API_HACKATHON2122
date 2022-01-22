@@ -15,5 +15,27 @@ Feature: To check The PUT method for Users
       | InputData_Users_PUT |         0 | PUT    |
       | InputData_Users_PUT |         1 | PUT    |
       | InputData_Users_PUT |         2 | PUT    |
-      #| InputData_Users_PUT |         3 | PUT    |
-      #| InputData_Users_PUT |         4 | PUT    |
+      | InputData_Users_PUT |         3 | PUT    |
+      | InputData_Users_PUT |         4 | PUT    |
+      | InputData_Users_PUT |         5 | PUT    |
+      | InputData_Users_PUT |         6 | PUT    |
+      | InputData_Users_PUT |         7 | PUT    |
+      | InputData_Users_PUT |         8 | PUT    |
+      | InputData_Users_PUT |         9 | PUT    |
+      | InputData_Users_PUT |        10 | PUT    |
+      | InputData_Users_PUT |        11 | PUT    |
+      | InputData_Users_PUT |        12 | PUT    |
+      | InputData_Users_PUT |        13 | PUT    |
+      | InputData_Users_PUT |        14 | PUT    |
+      | InputData_Users_PUT |        15 | PUT    |
+      | InputData_Users_PUT |        16 | PUT    |
+      | InputData_Users_PUT |        17 | PUT    |
+      | InputData_Users_PUT |        18 | PUT    |
+      | InputData_Users_PUT |        19 | PUT    |
+      | InputData_Users_PUT |        20 | PUT    |
+      | InputData_Users_PUT |        21 | PUT    |
+      | InputData_Users_PUT |        22 | PUT    |
+      | InputData_Users_PUT |        23 | PUT    |
+      | InputData_Users_PUT |        24 | PUT    |
+      | InputData_Users_PUT |        25 | PUT    |
+		

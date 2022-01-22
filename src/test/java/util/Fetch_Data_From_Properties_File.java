@@ -48,7 +48,7 @@ public class Fetch_Data_From_Properties_File {
 				this.lmsPojo.setNumericColumns(prop.getProperty("numeric.coloms"));
 				this.lmsPojo.setGET_SchemaFilePath(prop.getProperty("Get_Filepath"));
 				this.lmsPojo.setGET_AllSchemaFilePath(prop.getProperty("Get_all_Filepath"));
-				this.lmsPojo.setPOST_SchemaFilePath(prop.getProperty("POST_Filepath"));
+				this.lmsPojo.setPOST_SchemaFilePath(prop.getProperty("POST_User_Filepath"));
 				break;
 			case "Skills":
 				prop = readPropertiesFile("./src/test/resources/config/Skills.properties");

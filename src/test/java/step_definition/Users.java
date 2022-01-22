@@ -191,12 +191,13 @@ public class Users {
 
 		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
 		Response response = this.lmsPojo.getRes_response();
+		System.out.println("response" + response.asString());
 		assertNotNull(response);
 		assertEquals(response.getStatusCode(), this.lmsPojo.getStatus_code());
 
 		Map<String, Object> jsonMap = extractResponse(response);
 		assertNotNull(jsonMap);
-		if (this.lmsPojo.getStatus_message() != "") {
+		if (this.lmsPojo.getStatus_message() != "") {       
 			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
 
@@ -395,7 +396,7 @@ private Map<String, Object> extractResponse(Response response) {
 	try {
 		jsonMap = mapper.readValue(responseBody.asString(), Map.class);
 	} catch (JsonProcessingException e) {
-		// System.err.println(e.getMessage());
+		 System.err.println(e.getMessage());
 	}
 	return jsonMap;
 }

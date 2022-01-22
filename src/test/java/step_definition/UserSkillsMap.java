@@ -1,3 +1,10 @@
+/*******************************************************************************************************************************************************
+ * class Name: UserSkillsMAP
+ * 
+ * Purpose: Step Defination for UserSkillsMap API
+ * 
+ *******************************************************************************************************************************************************/
+
 package step_definition;
 
 import util.LMSPojo;
@@ -14,6 +21,8 @@ import static util.constant.LMSApiConstant.CONST_USERNAME;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_ENDPOINT;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_SKILLQUERY_ENDPOINT;
 import static util.constant.LMSApiConstant.CONST_USERSKILLSMAP_USERQUERY_ENDPOINT;
+import static util.constant.LMSApiConstant.CONST_SKILL_ID;
+import static util.constant.LMSApiConstant.CONST_USER_ID;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,20 +53,33 @@ import util.Send_Request_For_Method;
 
 public class UserSkillsMap {
 	
+	/**
+	 * Constructor - initialize LMS Pojo with data from properties files*/
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 	
-	/* Constructor - initialize LMS Pojo with data from properties files*/
+	/**
+	 * Fetch the data from the respective property files
+	 */
 	public UserSkillsMap() {
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File("UserSkillsMap");
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method("UserSkillsMap");
 	}
 	
+	/**
+	 * Create the request Specification with the UserName & Password fetched from the property file
+	 * 
+	 */
 	@Given("UserSkillsMap User is on Endpoint: url\\/UserSkillsMap with valid username and password")
 	public void user_skills_map_user_is_on_endpoint_url_user_skills_map_with_valid_username_and_password() throws IOException {
 		this.lmsPojo.setRequest_URL(Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 	}
+	
+	/**
+	 * Create the request Specification with the UserName & Password fetched from excel data used mostly in Authorization test case
+	 * 
+	 */
 	@Given("UserSkillsMap User with  username & password from {string} and {int}  is on Endpoint: url\\/UserSkillsMap\"")
 		public void Skills_User_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
 			ExcelReader reader = new ExcelReader();
@@ -68,6 +90,9 @@ public class UserSkillsMap {
 
 		}
 
+	/**
+	 * Create a GET All response
+	 */
 	@When("UserSkillsMap User sends GET request")
 	public void user_skills_map_user_sends_get_request() throws InterruptedException, InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath(CONST_USERSKILLSMAP_ENDPOINT);
@@ -76,11 +101,16 @@ public class UserSkillsMap {
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 	}
 
+	/**
+	 * Validate the status Code for the GEt request for All users
+	 */
 	@Then("UserSkillsMap User validates StatusCode")
 	public void user_skills_map_user_validates_status_code() {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(),200);
 	}
-
+	/**
+	 * Vaildate the JSON schema of response for GET all users
+	 */
 	@Then("UserSkillsMap JSON schema is valid")
 	public void user_skills_map_json_schema_is_valid() {
 		this.lmsPojo.setStr_SchemaFilePath(this.lmsPojo.getUser_Skill_SchemaFilePath());
@@ -90,6 +120,9 @@ public class UserSkillsMap {
 		}
 	}
 
+	/**
+	 * Create a GET response with specific user_ID, The user_ID is fetched from the excel sheet whose row no is mentioned in the feature file
+	 */
 	@When("UserSkillsMap_user User sends GET request on user id from {string} and {int}")
 	public void user_skills_map_user_user_sends_get_request_on_user_id_from_and(String sheetName, Integer rowNumber) 
 			throws IOException, InvalidFormatException, InterruptedException {
@@ -97,14 +130,16 @@ public class UserSkillsMap {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		//this.lmsPojo.setStr_basePath("/UserSkillsMap?user_id=" + (testData.get(rowNumber).get("user_id")));
-		this.lmsPojo.setStr_basePath(CONST_USERSKILLSMAP_USERQUERY_ENDPOINT + (testData.get(rowNumber).get("user_id")));		
+		this.lmsPojo.setStr_basePath(CONST_USERSKILLSMAP_USERQUERY_ENDPOINT + (testData.get(rowNumber).get(CONST_USER_ID)));		
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
 		this.lmsPojo.setRes_response(response);
 	}
-
+	/**
+	 * Validate the status Code & Status Message from the excel for the method requested for the specified user 
+	 */
 	@Then("UserSkillsMap_user User validates StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_skills_map_user_user_validates_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException {
@@ -113,13 +148,13 @@ public class UserSkillsMap {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		Map<String, String> scenario = testData.get(rowNumber);
-		String statusCodeString = scenario.get("StatusCode");
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
-		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("Status_Message"));
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
 
 		Response response = this.lmsPojo.getRes_response();
 
@@ -133,6 +168,9 @@ public class UserSkillsMap {
 		}
 	}
 
+	/**
+	 * Create a GET response with specific Skill ID, The userSkill ID is fetched from the excel sheet whose row no is mentioned in the feature file
+	 */
 	@When("UserSkillsMap_skill User sends GET request on user id from {string} and {int}")
 	public void user_skills_map_skill_user_sends_get_request_on_user_id_from_and(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException{
@@ -140,7 +178,7 @@ public class UserSkillsMap {
 		ExcelReader reader = new ExcelReader();
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
-		this.lmsPojo.setStr_basePath(CONST_USERSKILLSMAP_SKILLQUERY_ENDPOINT + (testData.get(rowNumber).get("skill_id")));
+		this.lmsPojo.setStr_basePath(CONST_USERSKILLSMAP_SKILLQUERY_ENDPOINT + (testData.get(rowNumber).get(CONST_SKILL_ID)));
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -148,6 +186,9 @@ public class UserSkillsMap {
 		this.lmsPojo.setRes_response(response);
 	}
 
+	/**
+	 * Validate the status Code & Status Message from the excel for the method requested for the specified Skills 
+	 */
 	@Then("UserSkillsMap_skill User validates StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_skills_map_skill_user_validates_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException {
@@ -155,13 +196,13 @@ public class UserSkillsMap {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		Map<String, String> scenario = testData.get(rowNumber);
-		String statusCodeString = scenario.get("StatusCode");
+		String statusCodeString = scenario.get(CONST_STATUS_CODE);
 
 		if (!StringUtils.isEmpty(statusCodeString)) {
 			this.lmsPojo.setStatus_code(Integer.parseInt(statusCodeString));
 		}
 
-		this.lmsPojo.setStatus_message(testData.get(rowNumber).get("Status_Message"));
+		this.lmsPojo.setStatus_message(testData.get(rowNumber).get(CONST_STATUS_MESSAGE));
 
 		Response response = this.lmsPojo.getRes_response();
 
@@ -174,6 +215,10 @@ public class UserSkillsMap {
 			assertEquals(jsonMap.get("message"), this.lmsPojo.getStatus_message());
 		}
 	}
+	
+	/**
+	 * Validate the status Code & Status Message from the excel for the method requested for the user Authorization cases 
+	 */
 	@Then("UserSkillsMap User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -196,6 +241,10 @@ public class UserSkillsMap {
 		}
 
 	}
+	
+	/**
+	 * Vaildate the JSON schema of response for Skills
+	 */
 
 	@Then("UserSkillsMap_skill JSON schema is valid")
 	public void user_skills_map_skill_json_schema_is_valid() {
@@ -215,7 +264,6 @@ public class UserSkillsMap {
 		try {
 			jsonMap = mapper.readValue(responseBody.asString(), Map.class);
 		} catch (JsonProcessingException e) {
-			// System.err.println(e.getMessage());
 		}
 		return jsonMap;
 	}

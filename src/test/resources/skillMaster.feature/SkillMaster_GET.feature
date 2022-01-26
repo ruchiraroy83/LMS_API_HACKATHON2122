@@ -9,16 +9,18 @@ Scenario: Verify GET all Skills for Skill Master
     And check the Database for skills
      
 
-Scenario Outline: Verify GET for a Skill with specific ID  
+Scenario Outline: Validate Skills Api with specific ID  
     When User sends GET request on skill id from "<SheetName>" and <RowNumber>
-    Then skills User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
+    Then User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And JSON schema is valid for "<Method>" in Skills
-    And skills check the Database   
+    And User should receive a particular skill from "<SheetName>" and <RowNumber>
+    And check the Database for validation  
     Examples: 
-    |SheetName |RowNumber| Method|
-    |Skills_GET|0       | GET   |
-   	|Skills_GET|1       | GET   |
-   	|Skills_GET|2       | GET   |
-   	|Skills_GET|3       | GET   |
-   	|Skills_GET|4       | GET   |
-   	|Skills_GET|5       | GET   |
+    |SheetName|RowNumber| Method|
+    |Skills_GET|0       |  GET  |
+   	|Skills_GET|1       |  GET  |
+   	|Skills_GET|2       |  GET  |
+   	|Skills_GET|3       |  GET  |
+   	|Skills_GET|4       |  GET  |
+   	|Skills_GET|5       |  GET  |
+	

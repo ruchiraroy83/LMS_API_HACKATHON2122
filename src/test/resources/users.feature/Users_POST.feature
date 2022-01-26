@@ -36,8 +36,7 @@ Scenario Outline: Validate POST Users
     |InputData_Users_POST| 23       | POST |
     |InputData_Users_POST| 24       | POST |
     |InputData_Users_POST| 25       | POST |
-    |InputData_Users_POST| 26       | POST |
-    |InputData_Users_POST| 27       | POST |
+
     
     |location_POST       | 0        |POST |
     |time_zone_POST      | 0        |POST |

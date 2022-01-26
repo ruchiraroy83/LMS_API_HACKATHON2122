@@ -7,6 +7,7 @@
 
 package step_definition;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static util.constant.LMSApiConstant.CONST_GET_SUCCESS_STATUS_CODE;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.core.options.CurlOption.HttpMethod;
@@ -43,12 +45,13 @@ import util.Send_Request_For_Method;
 
 public class UserSkills {
 	/**
-	 * Constructor - initialize LMS Pojo with data from properties files*/
+	 * Constructor - initialize LMS Pojo with data from properties files
+	 */
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public UserSkills() {
-		
+
 		/**
 		 * Fetch the data from the respective property files
 		 */
@@ -57,9 +60,10 @@ public class UserSkills {
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method(CONST_USERSKILLS_API);
 	}
-	
+
 	/**
-	 * Create the request Specification with the UserName & Password fetched from the property file
+	 * Create the request Specification with the UserName & Password fetched from
+	 * the property file
 	 * 
 	 */
 	@Given("userSkills User is on Endpoint: url\\/UserSkills with valid username and password")
@@ -70,7 +74,8 @@ public class UserSkills {
 	}
 
 	/**
-	 * Create the request Specification with the UserName & Password fetched from excel data used mostly in Authorization test case
+	 * Create the request Specification with the UserName & Password fetched from
+	 * excel data used mostly in Authorization test case
 	 * 
 	 */
 	@Given("userSkill User with  username & password from {string} and {int} is on Endpoint: url\\/UserSkills")
@@ -82,7 +87,7 @@ public class UserSkills {
 				testData.get(rowNumber).get("Password")));
 
 	}
-	
+
 	/**
 	 * Create a GET All response
 	 */
@@ -97,7 +102,8 @@ public class UserSkills {
 	}
 
 	/**
-	 * Create a GET response with specific userSkill ID, The userSkill ID is fetched from the excel sheet whose row no is mentioned in the feature file
+	 * Create a GET response with specific userSkill ID, The userSkill ID is fetched
+	 * from the excel sheet whose row no is mentioned in the feature file
 	 */
 	@When("userSkills User sends GET request on  id from {string} and {int}")
 	public void userSkills_user_sends_request_with_specific(String sheetName, int rowNumber)
@@ -115,8 +121,10 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 
 	}
+
 	/**
-	 * Create a POST response where all the fields for request body is being fetched from the excel sheet where row no is mentioned in the feature file
+	 * Create a POST response where all the fields for request body is being fetched
+	 * from the excel sheet where row no is mentioned in the feature file
 	 */
 	@When("userSkills User sends POST request body from {string} and {int} with valid JSON Schema")
 	public void userSkills_user_sends_POST_request_body_from(String sheetName, int rowNumber)
@@ -132,7 +140,9 @@ public class UserSkills {
 	}
 
 	/**
-	 * Create a PUT response with specific user Skill id & request body all the fields is being fetched from the excel sheet where row no is mentioned in the feature file
+	 * Create a PUT response with specific user Skill id & request body all the
+	 * fields is being fetched from the excel sheet where row no is mentioned in the
+	 * feature file
 	 */
 	@When("userSkills User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
 	public void userSkills_user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
@@ -142,7 +152,7 @@ public class UserSkills {
 		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(testData.get(rowNumber).get(CONST_USER_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API + "/"  + this.lmsPojo.getStr_userskillsid());
+		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API + "/" + this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
@@ -150,9 +160,10 @@ public class UserSkills {
 		this.lmsPojo.setRes_response(response);
 
 	}
-	
+
 	/**
-	 * Create a DELETE response with specific userSkill ID, The userSkill ID is fetched from the excel sheet whose row no is mentioned in the feature file
+	 * Create a DELETE response with specific userSkill ID, The userSkill ID is
+	 * fetched from the excel sheet whose row no is mentioned in the feature file
 	 */
 
 	@When("userSkills User sends request id ON DELETE Method from {string} and {int}")
@@ -163,14 +174,14 @@ public class UserSkills {
 		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), sheetName);
 
 		this.lmsPojo.setStr_userskillsid(DeltestData.get(rowNumber).get(CONST_USER_SKILL_ID));
-		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API + "/"  + this.lmsPojo.getStr_userskillsid());
+		this.lmsPojo.setStr_basePath("/" + CONST_USERSKILLS_API + "/" + this.lmsPojo.getStr_userskillsid());
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
 
 		Response response = this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.DELETE, this.lmsPojo.getExcelPath(), sheetName, rowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
-	
+
 	/**
 	 * Vaildate the JSON schema of response for GET all users
 	 */
@@ -184,7 +195,8 @@ public class UserSkills {
 	}
 
 	/**
-	 * Vaildate the JSON schema of response for Method as mentioned in the feature file
+	 * Vaildate the JSON schema of response for Method as mentioned in the feature
+	 * file
 	 */
 	@Then("userSkills JSON schema is valid for {string}")
 	public void userSkills_json_schema_is_valid_for(String MethodName) {
@@ -206,7 +218,7 @@ public class UserSkills {
 		}
 
 	}
-	
+
 	/**
 	 * Validate the status Code for the GEt request for All users
 	 */
@@ -216,10 +228,10 @@ public class UserSkills {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
 
 	}
-	
 
 	/**
-	 * Validate the status Code & Status Message from the excel for the Request Method for the specified user
+	 * Validate the status Code & Status Message from the excel for the Request
+	 * Method for the specified user
 	 */
 
 	@Then("userSkills User validates StatusCode and StatusMessage from {string} sheet and {int} row")
@@ -249,8 +261,10 @@ public class UserSkills {
 		}
 
 	}
+
 	/**
-	 * Validate the status Code & Status Message from the excel for the user Authorization testCases
+	 * Validate the status Code & Status Message from the excel for the user
+	 * Authorization testCases
 	 */
 
 	@Then("userSkills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
@@ -276,22 +290,22 @@ public class UserSkills {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, Object> extractResponse(Response response) {
-		ResponseBody responseBody = response.getBody();
+		ResponseBody<?> responseBody = response.getBody();
 		System.out.println("Response body is :" + response.getBody().asString());
 		assertNotNull(responseBody);
 		Map<String, Object> jsonMap = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			jsonMap = mapper.readValue(responseBody.asString(), Map.class);
+			jsonMap = mapper.readValue(responseBody.asString(), new TypeReference<Map<String, Object>>() {});
 		} catch (JsonProcessingException e) {
 		}
 		return jsonMap;
 	}
-	
+
 	/**
-	 * Validate response output with the input passed from the excel based on key value pair.
+	 * Validate response output with the input passed from the excel based on key
+	 * value pair.
 	 */
 
 	@Then("userSkills User should receive a list of users with skills in JSON body with the fields like user_skill_id,user_id,Skill_Id,months_of_exp from {string} and {int}")
@@ -316,9 +330,10 @@ public class UserSkills {
 		}
 
 	}
-	
+
 	/**
-	 * Validate Database based on the query & th resulted output of the query with the response.
+	 * Validate Database based on the query & th resulted output of the query with
+	 * the response.
 	 */
 
 	@And("^check the Database$")
@@ -355,7 +370,8 @@ public class UserSkills {
 	}
 
 	/**
-	 * Validate Database based on the query & th resulted output of the query with the response.
+	 * Validate Database based on the query & th resulted output of the query with
+	 * the response.
 	 */
 	@And("check the Database for userSkills")
 	public void check_the_database_for_all_users() {
@@ -387,6 +403,7 @@ public class UserSkills {
 			}
 		}
 	}
+
 	/**
 	 * Validate Database based on the query For the DELETE method.
 	 */
@@ -420,4 +437,52 @@ public class UserSkills {
 
 	}
 
+	@When("userSkills User check the database for creation time & modification time of a user with specified UserSkillsId from {string} and {int}")
+	public void user_skills_user_check_the_database_for_creation_time_modification_time_of_a_user_with_specified_user_skills_id_from_and(
+			String SheetName,int RowNumber) throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
+		String queryString = "SELECT creation_time,last_mod_time FROM tbl_lms_userskill_map WHERE user_skill_id='"
+				+ testData.get(RowNumber).get(CONST_USER_SKILL_ID) + "'";
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+		System.out.println(queryResult.values());
+		for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
+			if (queryResultFinal.getKey().equalsIgnoreCase("last_mod_time")) {
+				this.lmsPojo.setStr_modificationTime(queryResultFinal.getValue());
+			}else if (queryResultFinal.getKey().equalsIgnoreCase("creation_time")) {
+				this.lmsPojo.setStr_creationTime(queryResultFinal.getValue());
+			}
+		}
+		System.out.println(this.lmsPojo.getStr_creationTime());
+		System.out.println(this.lmsPojo.getStr_modificationTime());
+	}
+	
+
+
+	@Then("userSkills User check the database for new creation time & modification time of a user with specified UserSkillsId from {string} and {int}")
+	public void user_skills_user_check_the_database_for_new_creation_time_modification_time_of_a_user_with_specified_user_skills_id_from_and(String SheetName, int RowNumber) throws Throwable, IOException {
+		ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> DeltestData = reader.getData(this.lmsPojo.getExcelPath(), SheetName);
+		String queryString = "SELECT creation_time,last_mod_time FROM tbl_lms_userskill_map WHERE user_skill_id='"
+				+ DeltestData.get(RowNumber).get(CONST_USER_SKILL_ID) + "'";
+
+		Map<String, String> queryResult = Fetch_Data_From_SQL.connect(this.lmsPojo.getStr_DBURL(),
+				this.lmsPojo.getStr_DBUserName(), this.lmsPojo.getStr_DBPWD(), queryString);
+		for (Map.Entry<String, String> queryResultFinal : queryResult.entrySet()) {
+			if (queryResultFinal.getKey().equalsIgnoreCase("last_mod_time")) {
+				this.lmsPojo.setStr_newmodificationTime(queryResultFinal.getValue());
+			}else if (queryResultFinal.getKey().equalsIgnoreCase("creation_time")) {
+				this.lmsPojo.setStr_newcreationTime(queryResultFinal.getValue());
+			}
+		}
+		System.out.println(this.lmsPojo.getStr_newcreationTime());
+		System.out.println(this.lmsPojo.getStr_newmodificationTime());
+	}
+	
+	@Then("userSkills User check that the creation time is same but modification is different.")
+	public void user_skills_user_check_that_the_creation_time_is_same_but_modification_is_different() {
+	    assertEquals(this.lmsPojo.getStr_creationTime(), this.lmsPojo.getStr_newcreationTime());
+	    assertNotEquals(this.lmsPojo.getStr_modificationTime(), this.lmsPojo.getStr_newmodificationTime());
+	}
 }

@@ -11,7 +11,7 @@ import io.cucumber.junit.CucumberOptions;
 		"src/test/resources/users.feature",
 		"src/test/resources/userSkillsMap.feature"}, 
 glue = { "step_definition" }, 
-plugin = { "pretty",
+plugin = { "pretty","io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm",
 		"html:target/LMS-reports/LMS_htmlreports.html", 
 		"json:target/LMS-reports/LMS_JSONReports.json",
 		"junit:target/LMS-reports/LMS_XMLReports.xml",

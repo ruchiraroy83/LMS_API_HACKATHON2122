@@ -50,6 +50,35 @@ public class LMSPojo {
 	private String status_message;
 	private String numericColumns;
 	private String str_SchemaFileallusers;
+
+	private String str_creationTime;
+	private String str_modificationTime;
+	private String str_newcreationTime;
+	private String str_newmodificationTime;
+	public String getStr_creationTime() {
+		return str_creationTime;
+	}
+	public void setStr_creationTime(String str_creationTime) {
+		this.str_creationTime = str_creationTime;
+	}
+	public String getStr_modificationTime() {
+		return str_modificationTime;
+	}
+	public void setStr_modificationTime(String str_modificationTime) {
+		this.str_modificationTime = str_modificationTime;
+	}
+	public String getStr_newcreationTime() {
+		return str_newcreationTime;
+	}
+	public void setStr_newcreationTime(String str_newcreationTime) {
+		this.str_newcreationTime = str_newcreationTime;
+	}
+	public String getStr_newmodificationTime() {
+		return str_newmodificationTime;
+	}
+	public void setStr_newmodificationTime(String str_newmodificationTime) {
+		this.str_newmodificationTime = str_newmodificationTime;
+	}
 	public String getStr_UserFilePath() {
 		return str_UserFilePath;
 	}

@@ -34,8 +34,7 @@ Scenario Outline: Verify POST for a Skill when user logged with UserName with Pa
     And skills User should receive the skill in JSON body from "<SheetName>" and <RowNumber>
     And skills check the Database
     Examples: 
-		|SheetName     |RowNumber|
+		|SheetName             |RowNumber|
 		
-		|Invalid_Key   |0        |
-		|Invalid_content|0       |
-		 		  
+		|Invalid_content_POST  |0        |
+		

@@ -16,7 +16,6 @@ Scenario Outline: Verify POST for a Skill when user logged with UserName with Pa
 		|Skills_POST   |3        |POST |
 		|Skills_POST   |4        |POST |
 		|Skills_POST   |5        |POST |
-		|Skills_POST   |6        |POST |
 		|Skills_POST   |7        |POST |
 	
 Scenario Outline: Verify if POST fails for improper format when user logged with UserName with Password   

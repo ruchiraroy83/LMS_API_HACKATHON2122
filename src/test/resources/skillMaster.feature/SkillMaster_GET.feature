@@ -6,15 +6,14 @@ Scenario: Verify GET all Skills for Skill Master
     When skills User sends GET request 
     Then skills User validates StatusCode
     And skills JSON schema is valid
-    And check the Database for skills
      
 
 Scenario Outline: Validate Skills Api with specific ID  
     When User sends GET request on skill id from "<SheetName>" and <RowNumber>
-    Then User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
+    Then skills User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row
     And JSON schema is valid for "<Method>" in Skills
-    And User should receive a particular skill from "<SheetName>" and <RowNumber>
-    And check the Database for validation  
+    And skills User should receive the skill in JSON body from "<SheetName>" and <RowNumber>
+    And check the Database for skills 
     Examples: 
     |SheetName|RowNumber| Method|
     |Skills_GET|0       |  GET  |

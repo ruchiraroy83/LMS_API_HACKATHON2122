@@ -28,6 +28,7 @@ Scenario Outline: Verify PUT for a Skill when user logged with UserName with Pas
          |SheetName             |RowNumber|
 		     |Invalid_content_PUT   |0        |
 		     
+		     
 Scenario Outline: Verify PUT fails for a Skill with improper format when user logged with UserName with Password   
     When skills User sends PUT request on id and request body in text format skills from "<sheetname1>" and <rownumber1>
     Then skills User validates the StatusCode and StatusMessage from "<sheetname1>" sheet and <rownumber1> row

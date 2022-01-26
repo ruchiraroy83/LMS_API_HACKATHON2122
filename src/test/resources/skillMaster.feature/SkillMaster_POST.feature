@@ -28,6 +28,7 @@ Scenario Outline: Verify if POST fails for improper format when user logged with
 		  |Text_POST     |0         | 
 		  
 		  
+		  
 Scenario Outline: Verify POST for a Skill when user logged with UserName with Password   
     When skills User sends POST request body in skills from "<SheetName>" and <RowNumber> with valid JSON Schema
     Then skills User validates the StatusCode and StatusMessage from "<SheetName>" sheet and <RowNumber> row

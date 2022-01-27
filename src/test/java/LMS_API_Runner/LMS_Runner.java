@@ -15,7 +15,8 @@ plugin = { "pretty","io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm",
 		"html:target/LMS-reports/LMS_htmlreports.html", 
 		"json:target/LMS-reports/LMS_JSONReports.json",
 		"junit:target/LMS-reports/LMS_XMLReports.xml",
-		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
+		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
+		"timeline:test-output-thread/"},
 monochrome = true)
 
 public class LMS_Runner {

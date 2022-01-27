@@ -1,3 +1,10 @@
+/*******************************************************************************************************************************************************
+ * class Name: ExcelReader
+ * 
+ * Purpose: Excel Reader to fetch test data from the excel sheet
+ * 
+ *******************************************************************************************************************************************************/
+
 package util;
 
 import java.io.File;
@@ -21,29 +28,39 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReader {
-
+	/**
+	 * Function to get the Data from excel sheet using excelFilePath and sheetName
+	 */
 	public List<Map<String, String>> getData(String excelFilePath, String sheetName)
 			throws InvalidFormatException, IOException {
 		Sheet sheet = getSheetByName(excelFilePath, sheetName);
 		return readSheet(sheet);
 	}
-
+	/**
+	 * Function to get the Data from excel sheet using excelFilePath and sheetName
+	 */
 	public List<Map<String, String>> getData(String excelFilePath, int sheetNumber)
 			throws InvalidFormatException, IOException {
 		Sheet sheet = getSheetByIndex(excelFilePath, sheetNumber);
 		return readSheet(sheet);
 	}
-
+	/**
+	 * Function to get the Data by sheetname from excel sheet using excelFilePath and sheetName
+	 */
 	public Sheet getSheetByName(String excelFilePath, String sheetName) throws IOException, InvalidFormatException {
 		Sheet sheet = getWorkBook(excelFilePath).getSheet(sheetName);
 		return sheet;
 	}
-
+	/**
+	 * Function to get the Data by Index from excel sheet using excelFilePath and sheetName
+	 */
 	private Sheet getSheetByIndex(String excelFilePath, int sheetNumber) throws IOException, InvalidFormatException {
 		Sheet sheet = getWorkBook(excelFilePath).getSheetAt(sheetNumber);
 		return sheet;
 	}
-
+	/**
+	 * Function to get the workbook using excelFilePath
+	 */
 	private Workbook getWorkBook(String excelFilePath) throws IOException, InvalidFormatException {
 		String path = "src/test/resources/" + excelFilePath;
 		File fileObj = new File(path);
@@ -52,7 +69,9 @@ public class ExcelReader {
 		wb.close();
 		return wb;
 	}
-
+	/**
+	 * Function to read the Sheet using Sheetname
+	 */
 	private List<Map<String, String>> readSheet(Sheet sheet) {
 		Row row;
 		int totalRow = sheet.getPhysicalNumberOfRows();
@@ -73,7 +92,9 @@ public class ExcelReader {
 		}
 		return excelRows;
 	}
-
+	/**
+	 * Function to get the HeaderRowNumber using Sheetname
+	 */
 	private int getHeaderRowNumber(Sheet sheet) {
 		Row row;
 		int totalRow = sheet.getLastRowNum();
@@ -100,11 +121,15 @@ public class ExcelReader {
 		}
 		return (-1);
 	}
-
+	/**
+	 * Function to get the a particular row using Sheetname and rownumber
+	 */
 	private Row getRow(Sheet sheet, int rowNumber) {
 		return sheet.getRow(rowNumber);
 	}
-
+	/**
+	 * Function to get the a particular cell value using Sheetname,rownumber and columnnumber 
+	 */
 	private LinkedHashMap<String, String> getCellValue(Sheet sheet, Row row, int currentColumn) {
 		LinkedHashMap<String, String> columnMapdata = new LinkedHashMap<String, String>();
 		Cell cell;
@@ -161,7 +186,9 @@ public class ExcelReader {
 		}
 		return columnMapdata;
 	}
-
+	/**
+	 * Function to get the a particular column name using path and sheetname 
+	 */
 	public ArrayList<String> getColumnNames(String path, String strSheetName) {
 		try {
 			ArrayList<String> dataList = new ArrayList<String>();

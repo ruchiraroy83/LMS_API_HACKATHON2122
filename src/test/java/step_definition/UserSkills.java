@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************************************
  * class Name: UserSkills
  * 
- * Purpose: Step Defination for User Skills API
+ * Purpose: Step Definition for User Skills API
  * 
  *******************************************************************************************************************************************************/
 
@@ -183,7 +183,7 @@ public class UserSkills {
 	}
 
 	/**
-	 * Vaildate the JSON schema of response for GET all users
+	 * Validate the JSON schema of response for GET all users
 	 */
 
 	@Then("userSkills JSON schema is valid")
@@ -195,7 +195,7 @@ public class UserSkills {
 	}
 
 	/**
-	 * Vaildate the JSON schema of response for Method as mentioned in the feature
+	 * Validate the JSON schema of response for Method as mentioned in the feature
 	 * file
 	 */
 	@Then("userSkills JSON schema is valid for {string}")
@@ -220,7 +220,7 @@ public class UserSkills {
 	}
 
 	/**
-	 * Validate the status Code for the GEt request for All users
+	 * Validate the status Code for the GET request for All user Skills
 	 */
 
 	@Then("userSkills User validates StatusCode")
@@ -332,7 +332,7 @@ public class UserSkills {
 	}
 
 	/**
-	 * Validate Database based on the query & th resulted output of the query with
+	 * Validate Database based on the query & the resulted output of the query with
 	 * the response.
 	 */
 
@@ -370,7 +370,7 @@ public class UserSkills {
 	}
 
 	/**
-	 * Validate Database based on the query & th resulted output of the query with
+	 * Validate Database based on the query & the  output result of the query with
 	 * the response.
 	 */
 	@And("check the Database for userSkills")

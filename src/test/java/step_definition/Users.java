@@ -1,3 +1,10 @@
+/*******************************************************************************************************************************************************
+ * class Name: Users
+ * 
+ * Purpose: Step Definition for Users API
+ * 
+ *******************************************************************************************************************************************************/
+
 package step_definition;
 
 import static org.testng.Assert.assertEquals;
@@ -38,20 +45,36 @@ import util.LMSPojo;
 import util.Send_Request_For_Method;
 
 public class Users {
+	/**
+	 * Constructor - initialize LMS Pojo with data from properties files
+	 */
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public Users() {
+		/**
+		 * Fetch the data from the respective property files
+		 */
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_USERS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method(CONST_USERS_API);
 	}
+	/**
+	 * Create the request Specification with the UserName & Password fetched from
+	 * the property file
+	 * 
+	 */
 
 	@Given("UsersAPI User is on Endpoint: url\\/Users with valid username and password")
 	public void UsersAPI_user_is_on_endpoint_url_users_with_valid_username_and_password() throws IOException {
 		this.lmsPojo.setRequest_URL(Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
+	/**
+	 * Create the request Specification with the UserName & Password fetched from
+	 * excel data used mostly in Authorization test case
+	 * 
+	 */
 	@Given("UsersAPI User is on Endpoint: url\\/Users username & password from {string} and {int}")
 	public void users_API_user_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -60,6 +83,9 @@ public class Users {
 				Send_Request_For_Method.request_URL(testData.get(rowNumber).get(CONST_USERNAME), testData.get(rowNumber).get(CONST_PASSWORD)));
 	    
 	}
+	/**
+	 * Create a GET All response
+	 */
 
 	@When("UsersAPI User sends GET request")
 	public void UsersAPI_user_sends_request_users_api() throws InterruptedException, InvalidFormatException, IOException {
@@ -68,6 +94,10 @@ public class Users {
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 	}
+	/**
+	 * Create a GET response with specific user ID, The user ID is fetched
+	 * from the excel sheet whose row no is mentioned in the feature file
+	 */
 	
 	@When("UsersAPI User sends GET request on userid from {string} and {int}")
 	public void UsersAPI_user_sends_get_request_on_userid_from_and(String sheetName, int rowNumber)
@@ -85,7 +115,10 @@ public class Users {
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0);
 		this.lmsPojo.setRes_response(response);
 	}
-	
+	/**
+	 * Create a POST response where all the fields for request body is being fetched
+	 * from the excel sheet where row no is mentioned in the feature file
+	 */
 	@When("UsersAPI User  sends POST request body from {string} and {int} with valid JSON Schema")
 	public void users_api_sends_post_request_body_from_and_with_valid_json_schema(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/Users");
@@ -95,7 +128,11 @@ public class Users {
 				this.lmsPojo.getRequest_URL(), HttpMethod.POST, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
-	
+	/**
+	 * Create a PUT response with specific user id & request body all the
+	 * fields is being fetched from the excel sheet where row no is mentioned in the
+	 * feature file
+	 */
 	@When("UsersAPI User sends PUT request on id and request body from {string} and {int} with valid JSON schema")
 	public void UsersAPI_user_sends_put_request_body_from_and(String sheetName, Integer rowNumber)
 			throws InvalidFormatException, IOException {
@@ -112,7 +149,9 @@ public class Users {
 		this.lmsPojo.setRes_response(response);
 
 	}
-
+	/**
+	 * Validate the JSON schema of response for GET all users
+	 */
 	
 	@Then("UsersAPI JSON schema is valid")
 	public void UsersAPI_json_schema_is_valid() {
@@ -120,15 +159,11 @@ public class Users {
 		System.out.println(this.lmsPojo.getGET_AllSchemaFilePath());
 		JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
 		this.lmsPojo.getGET_AllSchemaFilePath());
-		
-////		this.lmsPojo.setStr_SchemaFileallusers("User_Schema_GET.json");"src/test/resources/" +
-////		if ((this.lmsPojo.getRes_response().getStatusCode() == CONST_GET_SUCCESS_STATUS_CODE)
-////				|| (this.lmsPojo.getRes_response().getStatusCode() == CONST_POST_SUCCESS_STATUS_CODE)) {
-////			System.out.println("USER Schema file is" + this.lmsPojo.getStr_SchemaFileallusers());
-////			JSON_Schema_Validation.cls_JSON_SchemaValidation(this.lmsPojo.getRes_response(),
-////					this.lmsPojo.getStr_SchemaFileallusers());
-//		}
 	}
+	/**
+	 * Validate the JSON schema of response for Method as mentioned in the feature
+	 * file
+	 */
 	
 	@Then("UsersAPI JSON schema is valid for {string}")
 	public void UsersAPI_json_schema_is_valid_for(String MethodName) {
@@ -169,13 +204,19 @@ public class Users {
 			}
 		}
 	}
+	/**
+	 * Validate the status Code for the GET request for All users
+	 */
 
 	@Then("UsersAPI User validates StatusCode")
 	public void UsersAPI_user_validates_status_code() throws InvalidFormatException, IOException {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
 		System.out.println("Status Code actual : " + this.lmsPojo.getRes_response().getStatusCode());
 	}
-	
+	/**
+	 * Validate the status Code & Status Message from the excel for the Request
+	 * Method for the specified user
+	 */
 	
 	@Then("UsersAPI User validates StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void UsersAPI_user_receives_status_code_with(String sheetName, int rowNumber) throws InvalidFormatException, IOException {
@@ -202,7 +243,10 @@ public class Users {
 		}
 
 	}
-	
+	/**
+	 * Validate the status Code & Status Message from the excel for the user
+	 * Authorization testCases
+	 */
 	@Then("UsersAPI User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -225,6 +269,10 @@ public class Users {
 		}
 
 	}
+	/**
+	 * Validate Database based on the query & the resulted output of the query with
+	 * the response.
+	 */
 
 	@Then("check the Database for all users")
 	public void check_the_database_for_all_users() {
@@ -257,7 +305,10 @@ public class Users {
 			}
 		}
 	}
-
+	/**
+	 * Validate Database based on the query & the resulted output of the query with
+	 * the response.
+	 */
 	
 	@And("^UsersAPI check the Database$")
 	public void usersAPI_check_the_database() throws Throwable {
@@ -327,6 +378,10 @@ public class Users {
 			}
 		}
 	}
+	/**
+	 * Validate Database based on the query For the DELETE method.
+	 */
+
 	
 	@Then("UsersAPI User check the Database to validate deletion from {string} sheet and {int} row")
 	public void users_api_check_the_database_to_validate_deletion_from_sheet_and_row(String sheetName, Integer rowNumber) throws Throwable, IOException {

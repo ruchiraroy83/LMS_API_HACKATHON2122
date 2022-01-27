@@ -91,7 +91,7 @@ public class Send_Request_For_Method {
 
 			Map<String, String> row = excelRows.get(rowNumber);
 			 /**
-			  * removing the colums & their values from the fetched data of excel which are not required in the request body
+			  * removing the columns & their values from the fetched data of excel which are not required in the request body
 			  */
 			row.remove(CONST_SCENARIO);
 			row.remove(CONST_STATUS_CODE);

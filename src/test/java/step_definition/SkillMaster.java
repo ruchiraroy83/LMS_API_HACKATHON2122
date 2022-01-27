@@ -1,3 +1,10 @@
+/*******************************************************************************************************************************************************
+ * class Name: Skills
+ * 
+ * Purpose: Step Definition for Skills API
+ * 
+ *******************************************************************************************************************************************************/
+
 package step_definition;
 
 import static org.testng.Assert.assertEquals;
@@ -40,15 +47,26 @@ import util.JSON_Schema_Validation;
 import util.LMSPojo;
 import util.Send_Request_For_Method;
 public class SkillMaster {
+	/**
+	 * Constructor - initialize LMS Pojo with data from properties files
+	 */
 	
 	private LMSPojo lmsPojo;
 	private Send_Request_For_Method send_Request_For_Method;
 
 	public SkillMaster() {
+		/**
+		 * Fetch the data from the respective property files
+		 */
 		Fetch_Data_From_Properties_File data_From_Properties_File = new Fetch_Data_From_Properties_File(CONST_SKILLS_API);
 		this.lmsPojo = data_From_Properties_File.getLmsPojo();
 		this.send_Request_For_Method = new Send_Request_For_Method(CONST_SKILLS_API);
 	}
+	/**
+	 * Create the request Specification with the UserName & Password fetched from
+	 * the property file
+	 * 
+	 */
 	
    @Given("Skills User is on Endpoint: url\\/Skills with valid username and password")
 	public void skills_user_is_on_endpoint_url_user_skills() throws IOException {
@@ -57,6 +75,11 @@ public class SkillMaster {
 				Send_Request_For_Method.request_URL(this.lmsPojo.getUserName(), this.lmsPojo.getPassword()));
 
 	}
+   /**
+	 * Create the request Specification with the UserName & Password fetched from
+	 * excel data used mostly in Authorization test case
+	 * 
+	 */
    @Given("Skills User with  username & password from {string} and {int} is on Endpoint: url\\/Skills")
 	public void Skills_User_is_on_endpoint_url_users_username_password_from_and(String sheetName, Integer rowNumber) throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -66,6 +89,9 @@ public class SkillMaster {
 				Send_Request_For_Method.request_URL(testData.get(rowNumber).get(CONST_USERNAME), testData.get(rowNumber).get(CONST_PASSWORD)));
 
 	}
+   /**
+	 * Create a GET All response
+	 */
 	@When("skills User sends GET request")
 	public void user_sends_get_request_on_skills() throws InvalidFormatException, IOException {
 		
@@ -75,6 +101,10 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 	}
+	/**
+	 * Create a GET response with specific Skill Id, The Skill Id is fetched
+	 * from the excel sheet whose row no is mentioned in the feature file
+	 */
 	
 	@When("User sends GET request on skill id from {string} and {int}")
 	public void user_sends_get_request_on_skill_id_from_and(String SheetName, int RowNumber) throws InvalidFormatException, IOException {
@@ -92,6 +122,10 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 
 	}
+	/**
+	 * Create a POST response where all the fields for request body is being fetched
+	 * from the excel sheet where row no is mentioned in the feature file
+	 */
 	@When("skills User sends POST request body in skills from {string} and {int} with valid JSON Schema")
 	public void user_sends_POST_request_body_from_and(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
@@ -102,6 +136,10 @@ public class SkillMaster {
 		this.lmsPojo.setRes_response(response);
 		
 	}
+	/**
+	 * Create a POST response where all the fields for request body is set to text and is being fetched
+	 * from the excel sheet where row no is mentioned in the feature file. 
+	 */
 	@When("skills User sends POST request body in text format skills from {string} and {int}")
 	public void skills_User_sends_POST_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
@@ -138,6 +176,11 @@ public class SkillMaster {
 			}
 		this.lmsPojo.setRes_response(response);
 	}
+	/**
+	 * Create a PUT response with specific user Skill Id & request body all the
+	 * fields is being fetched from the excel sheet where row no is mentioned in the
+	 * feature file
+	 */
 	
 	@When("skills User sends PUT request on id and request body in skills from {string} and {int} with valid JSON Schema")
 	public void user_sends_put_request_body_in_skills_from_and_with_valid_json_schema(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
@@ -155,6 +198,11 @@ public class SkillMaster {
 				this.lmsPojo.getRequest_URL(), HttpMethod.PUT, this.lmsPojo.getExcelPath(), SheetName, RowNumber);
 		this.lmsPojo.setRes_response(response);
 	}
+	/**
+	 * Create a PUT response with specific user Skill Id & request body all the
+	 * fields is being fetched from the excel sheet and request is sent as text where row no is mentioned in the
+	 * feature file
+	 */
 	@When("skills User sends PUT request on id and request body in text format skills from {string} and {int}")
 	public void skills_User_sends_PUT_request_body_in_text_format_skills_from(String SheetName,int RowNumber) throws InvalidFormatException, IOException {
 		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
@@ -193,7 +241,10 @@ public class SkillMaster {
 			}
 		this.lmsPojo.setRes_response(response);
 	}
-
+	/**
+	 * Create a DELETE response with specific Skill Id, The Skill Id is
+	 * fetched from the excel sheet whose row no is mentioned in the feature file
+	 */
 	@When("skills User sends DELETE skill id ON DELETE Method from {string} and {int}")
 	public void user_sends_delete_skill_id_on_delete_method_from_and_row_number(String SheetName, Integer RowNumber) throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -228,6 +279,10 @@ public class SkillMaster {
 		}
 	   
 	}
+	/**
+	 * Validate the JSON schema of response for GET all Skills
+	 */
+
 	@Then("skills JSON schema is valid")
 	public void json_schema_is_valid() {
 		
@@ -241,6 +296,10 @@ public class SkillMaster {
 	
 		
 	}
+	/**
+	 * Validate the JSON schema of response for Method as mentioned in the feature
+	 * file
+	 */
 	
 	@Then("JSON schema is valid for {string} in Skills")
 	public void json_schema_is_valid_for_get_in_skills(String Method) {
@@ -262,12 +321,18 @@ public class SkillMaster {
 					this.lmsPojo.getStr_SchemaFileSkills());
 		}
 	}
+	/**
+	 * Validate the status Code for the GEt request for All skills
+	 */
 
 	@Then("skills User validates StatusCode")
 	public void user_validates_the_status_code() {
 		assertEquals(this.lmsPojo.getRes_response().getStatusCode(), 200);
 	}
-	
+	/**
+	 * Validate the status Code & Status Message from the excel for the Request
+	 * Method for the specified skill
+	 */
 	@Then("skills User validates the StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_validates_the_statuscode_and_statusmessage_from(String SheetName, int RowNumber) throws InvalidFormatException, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -305,6 +370,10 @@ public class SkillMaster {
 		jsonMap = mapper.readValue(responseBody.asString(), Map.class);
 		return jsonMap;
 	}
+	/**
+	 * Validate the status Code & Status Message from the excel for the skill
+	 * Authorization testCases
+	 */
 	@Then("Skills User Checks for StatusCode StatusCode and StatusMessage from {string} sheet and {int} row")
 	public void user_skills_user_checks_for_status_code_status_code_and_status_message_from_sheet_and_row(String sheetName, Integer rowNumber)  throws Throwable, IOException {
 		ExcelReader reader = new ExcelReader();
@@ -328,7 +397,10 @@ public class SkillMaster {
 
 	}
 
-
+	/**
+	 * Validate Database based on the query & the output result of the query with
+	 * the response.
+	 */
 	
 	@Then("check the Database for skills")
 	public void check_the_database_for_all_skills() throws JsonMappingException, JsonProcessingException {
@@ -400,6 +472,9 @@ public class SkillMaster {
 		}
 		}
 	}
+	/**
+	 * Validate Database based on the query For the DELETE method.
+	 */
 	@And("skills User checks the Database to validate deletion from {string} sheet and {int} row")
 	public void skills_user_check_the_Database_to_validate_deletion(String sheetName,int rowNumber ) throws Throwable, IOException {
 		Map<String, Object> jsonMap = extractResponse(this.lmsPojo.getRes_response());

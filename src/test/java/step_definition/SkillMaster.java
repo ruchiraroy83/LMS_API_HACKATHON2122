@@ -71,7 +71,7 @@ public class SkillMaster {
 		
 		this.lmsPojo.setStr_basePath("/"+CONST_SKILLS_API);
 		this.lmsPojo.setStr_FinalURI(this.lmsPojo.getStr_baseURL() + this.lmsPojo.getStr_basePath());
-		System.out.println("Request URL:" + this.lmsPojo.getRequest_URL());
+		System.out.println("Request URL:" + this.lmsPojo.getStr_FinalURI());
 		this.lmsPojo.setRes_response(this.send_Request_For_Method.Sent_request(this.lmsPojo.getStr_FinalURI(),
 				this.lmsPojo.getRequest_URL(), HttpMethod.GET, "", "", 0));
 	}

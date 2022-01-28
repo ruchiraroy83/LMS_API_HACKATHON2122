@@ -1,6 +1,6 @@
 /.classpath
 /.project
-/target/
 /bin/
 /allure-results/
 /test-output-thread/
+/target/
